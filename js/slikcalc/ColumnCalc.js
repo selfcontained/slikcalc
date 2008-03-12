@@ -23,7 +23,7 @@ slikcalc.ColumnCalc = function(config) {
 		slikcalc.addOnLoad(this.calculate, this);
 	}
 };
-YAHOO.lang.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc);
+slikcalc.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc)
 
 /**
  * @prototype
@@ -54,7 +54,7 @@ slikcalc.ColumnCalc.prototype.calculate = function() {
 		}
 	}
 	slikcalc.setAmount(this.config.totalId, total);
-	this.calculationComplete.fire();
+	slikcalc.fireEvent(this.calculationComplete);
 };
 
 slikcalc.ColumnCalc.prototype.registerListeners = function() {

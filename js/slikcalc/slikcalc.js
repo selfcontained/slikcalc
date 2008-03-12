@@ -61,6 +61,10 @@ slikcalc = {
         }
         return (((sign)?'':'-') + '' + num + '.' + cents);
     },
+    
+    trim : function(string) {
+		return string.replace(/^\s+|\s+$/g, '');
+	},
 	
 	get : function(id) {
 		if(this.adapter === null) {
@@ -83,8 +87,20 @@ slikcalc = {
 		this.adapter.addOnLoad(method, scope);
 	},
 	
-	trim : function(string) {
-		return string.replace(/^\s+|\s+$/g, '');
+	createCustomEvent : function(eventType) {
+		return this.adapter.createCustomEvent(eventType);
+	},
+	
+	bindEvent : function(event, method, scope) {
+		this.adapter.bindEvent(event, method, scope);
+	},
+	
+	fireEvent : function(event) {
+		this.adapter.fireEvent(event);
+	},
+	
+	extend : function(originalObj, superObj) {
+		this.adapter.extend(originalObj, superObj);
 	}
 	
 }

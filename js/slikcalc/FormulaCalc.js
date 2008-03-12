@@ -29,7 +29,7 @@ slikcalc.FormulaCalc = function(config) {
 		this.addRow({ vars : config.vars });
 	}
 };
-YAHOO.lang.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
+slikcalc.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
 
 /**
  * @prototype
@@ -135,5 +135,5 @@ slikcalc.FormulaCalc.prototype.calculate = function() {
 	if(this.totalId !== null) {
 		slikcalc.setAmount(this.totalId, total);
 	}
-	this.calculationComplete.fire();
+	slikcalc.fireEvent(this.calculationComplete);
 };

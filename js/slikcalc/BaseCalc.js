@@ -7,7 +7,7 @@
  * @constructor
  */
 slikcalc.BaseCalc = function() {
-	this.calculationComplete = new YAHOO.util.CustomEvent("calculationComplete", this);
+	this.calculationComplete = slikcalc.createCustomEvent('calculationComplete');
 };
 
 /**
@@ -26,7 +26,7 @@ slikcalc.BaseCalc.prototype = {
 	 * this.calculate will be called after dependCalc.calculate
 	 */
 	dependsOn : function(dependCalc) {
-		dependCalc.calculationComplete.subscribe(this.calculate, this, true);
+		slikcalc.bindEvent(dependCalc.calculationComplete, this.calculate, this);
 		return dependCalc;
 	},
 	
@@ -35,7 +35,7 @@ slikcalc.BaseCalc.prototype = {
 	 * this.calculate will be called before triggeredCalc.calculate
 	 */
 	triggers : function(triggeredCalc) {
-		this.calculationComplete.subscribe(triggeredCalc.calculate, triggeredCalc, true);
+		slikcalc.bindEvent(this.calculationComplete, triggeredCalc.calculate, triggeredCalc);
 		return triggeredCalc;
 	},
 	
