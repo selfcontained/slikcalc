@@ -6,14 +6,14 @@
 /**
  * @constructor
  */
-BaseCalc = function() {
+slikcalc.BaseCalc = function() {
 	this.calculationComplete = new YAHOO.util.CustomEvent("calculationComplete", this);
 };
 
 /**
  * @prototype
  */
-BaseCalc.prototype = {
+slikcalc.BaseCalc.prototype = {
 
 	calculationComplete : null,
 	

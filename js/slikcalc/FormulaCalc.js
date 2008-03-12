@@ -13,8 +13,8 @@
  *  								passed in on the addRow method.  Example: "{a} + {b} = {c}".  "{a} + {b}" is used as the formula, 
  * 									and {c} becomes the position that the eval'd result is placed into.
  */
-FormulaCalc = function(config) {
-	FormulaCalc.superclass.constructor.call(this); 
+slikcalc.FormulaCalc = function(config) {
+	slikcalc.FormulaCalc.superclass.constructor.call(this);
 	config = config || {};
 	this.calcOnLoad = config.calcOnLoad || false;
 	this.formula = config.formula || '';
@@ -29,23 +29,23 @@ FormulaCalc = function(config) {
 		this.addRow({ vars : config.vars });
 	}
 };
-YAHOO.lang.extend(FormulaCalc, BaseCalc);
+YAHOO.lang.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
 
 /**
  * @prototype
  */
-FormulaCalc.prototype.calcOnLoad = false;
-FormulaCalc.prototype.registerListeners = false;
-FormulaCalc.prototype.initialized = false;
-FormulaCalc.prototype.totalId = null;
-FormulaCalc.prototype.totalOperator = null;
-FormulaCalc.prototype.formula = null;
-FormulaCalc.prototype.formulaParsed = null;
-FormulaCalc.prototype.resultVar = null;
-FormulaCalc.prototype.varMatch = /\{(\w)\}/gi;
-FormulaCalc.prototype.rows = null;
+slikcalc.FormulaCalc.prototype.calcOnLoad = false;
+slikcalc.FormulaCalc.prototype.registerListeners = false;
+slikcalc.FormulaCalc.prototype.initialized = false;
+slikcalc.FormulaCalc.prototype.totalId = null;
+slikcalc.FormulaCalc.prototype.totalOperator = null;
+slikcalc.FormulaCalc.prototype.formula = null;
+slikcalc.FormulaCalc.prototype.formulaParsed = null;
+slikcalc.FormulaCalc.prototype.resultVar = null;
+slikcalc.FormulaCalc.prototype.varMatch = /\{(\w)\}/gi;
+slikcalc.FormulaCalc.prototype.rows = null;
 
-FormulaCalc.prototype.initialize = function() {
+slikcalc.FormulaCalc.prototype.initialize = function() {
 	this.initialized = true;
 	this.formulaParsed = this.formula;
 	if(this.formulaParsed.indexOf('=') !== -1) {
@@ -73,7 +73,7 @@ FormulaCalc.prototype.initialize = function() {
  * 
  * Adds a rowConfig object to this.rows
  */
-FormulaCalc.prototype.addRow = function(rowConfig) {
+slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};
 	if(rowConfig.checkbox !== undefined) {
 		YAHOO.util.Event.addListener(rowConfig.checkbox.id, 'click', this.calculate, this, true);
@@ -90,7 +90,7 @@ FormulaCalc.prototype.addRow = function(rowConfig) {
 	this.rows.push(rowConfig);
 };
 
-FormulaCalc.prototype.calculate = function() {
+slikcalc.FormulaCalc.prototype.calculate = function() {
 	if(this.initialized === false) {
 		this.initialize();
 	}

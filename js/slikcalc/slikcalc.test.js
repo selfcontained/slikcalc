@@ -6,6 +6,7 @@ slikcalc.tests = {
 		TestRunner.add(this.columnCalcTest());
 		TestRunner.add(this.formulaCalcTest());
         TestRunner.add(this.formulaCalcRowsTest());
+		TestRunner.add(this.chainedCalcRowsTest());
 		var testLogger = new YAHOO.tool.TestLogger();
         testLogger.hideCategory('info');
 		TestRunner.run();
@@ -161,7 +162,45 @@ slikcalc.tests = {
                 this.Assert.areEqual(0.00, slikcalc.getAmount('formula-rows-total'));
             }
         });
-    }
+    },
+	
+	chainedCalcRowsTest : function() {
+		return new YAHOO.tool.TestCase({
+			
+			Assert : YAHOO.util.Assert,
+
+		    name: "ChainedCalcs",
+		
+			column1: slikcalc.examples.chainedCalcs.columnCalc1,
+			
+			column2: slikcalc.examples.chainedCalcs.columnCalc2,
+			
+			formula: slikcalc.examples.chainedCalcs.formulaCalc,
+			
+			tearDown : function() {
+                slikcalc.setValue('chained-1-1', '5.00');
+				slikcalc.setValue('chained-1-2', '');
+				slikcalc.setValue('chained-2-1', '');
+				slikcalc.setValue('chained-2-2', '');
+			},
+            
+	        testCalcOnLoad : function() {
+				this.Assert.areEqual(5.00, slikcalc.getAmount('chained-1-total'));
+				this.Assert.areEqual(5.00, slikcalc.getAmount('chained-3-total'));
+			},
+			
+			testCalculateChain : function() {
+				slikcalc.setAmount('chained-1-1', 25.00);
+				slikcalc.setAmount('chained-1-2', 3.28);
+				slikcalc.setAmount('chained-2-1', 7.56);
+				slikcalc.setAmount('chained-2-2', 21.90);
+				this.column1.calculate();
+				this.Assert.areEqual(28.28, slikcalc.getAmount('chained-1-total'));
+				this.Assert.areEqual(29.46, slikcalc.getAmount('chained-2-total'));
+				this.Assert.areEqual(57.74, slikcalc.getAmount('chained-3-total'));
+			}
+		});
+	}
 	
 };
 YAHOO.util.Event.addListener(window, 'load', slikcalc.tests.initialize, slikcalc.tests, true);

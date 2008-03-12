@@ -9,8 +9,8 @@
  * @param	config[totalId]		(Required) Element ID to place end result of column calculation
  * @param	config[operator]	(Optional) Mathematical operator to apply against each column to produce end result.  Defaults to '+'
  */
-ColumnCalc = function(config) {
-	ColumnCalc.superclass.constructor.call(this); 
+slikcalc.ColumnCalc = function(config) {
+	slikcalc.ColumnCalc.superclass.constructor.call(this); 
 	this.config = config || {};
 	this.operator = config.operator || '+';
 	this.rows = [];
@@ -23,16 +23,16 @@ ColumnCalc = function(config) {
 		YAHOO.util.Event.addListener(window, 'load', this.calculate, this, true);
 	}
 };
-YAHOO.lang.extend(ColumnCalc, BaseCalc);
+YAHOO.lang.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc);
 
 /**
  * @prototype
  */
-ColumnCalc.prototype.config = null;
-ColumnCalc.prototype.operator = null;
-ColumnCalc.prototype.rows = null;
+slikcalc.ColumnCalc.prototype.config = null;
+slikcalc.ColumnCalc.prototype.operator = null;
+slikcalc.ColumnCalc.prototype.rows = null;
 
-ColumnCalc.prototype.calculate = function() {
+slikcalc.ColumnCalc.prototype.calculate = function() {
 	var total = 0.00;
 	for(var idx in this.rows) {
 		
@@ -57,7 +57,7 @@ ColumnCalc.prototype.calculate = function() {
 	this.calculationComplete.fire();
 };
 
-ColumnCalc.prototype.registerListeners = function() {
+slikcalc.ColumnCalc.prototype.registerListeners = function() {
 	for(var idx in this.rows) {
 		YAHOO.util.Event.addListener(this.rows[idx].id, 'keyup', this.calculateCheck, this, true);
 	}	
@@ -71,7 +71,7 @@ ColumnCalc.prototype.registerListeners = function() {
  * 
  * Adds a row config object to this.rows
  */
-ColumnCalc.prototype.addRow = function(rowConfig) {
+slikcalc.ColumnCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};
 	if(rowConfig.checkbox !== undefined) {
 		YAHOO.util.Event.addListener(rowConfig.checkbox.id, 'click', this.calculate, this, true);
