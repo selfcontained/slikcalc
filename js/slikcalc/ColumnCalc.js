@@ -16,11 +16,11 @@ slikcalc.ColumnCalc = function(config) {
 	this.rows = [];
 	config.registerListeners = config.registerListeners || false;
 	if(config.registerListeners === true) {
-		YAHOO.util.Event.addListener(window, 'load', this.registerListeners, this, true);
+		slikcalc.addOnLoad(this.registerListeners, this);
 	}
 	config.calcOnLoad = config.calcOnLoad || false;
 	if(config.calcOnLoad === true) {
-		YAHOO.util.Event.addListener(window, 'load', this.calculate, this, true);
+		slikcalc.addOnLoad(this.calculate, this);
 	}
 };
 YAHOO.lang.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc);
@@ -39,7 +39,7 @@ slikcalc.ColumnCalc.prototype.calculate = function() {
 		var includeRow = true;
 		if(this.rows[idx].checkbox !== undefined) {
 			var checkbox = this.rows[idx].checkbox;
-			var checked = YAHOO.util.Dom.get(checkbox.id).checked;
+			var checked = slikcalc.get(checkbox.id).checked;
 			includeRow = (checkbox.invert !== checked);
 			
 			/**
@@ -59,7 +59,7 @@ slikcalc.ColumnCalc.prototype.calculate = function() {
 
 slikcalc.ColumnCalc.prototype.registerListeners = function() {
 	for(var idx in this.rows) {
-		YAHOO.util.Event.addListener(this.rows[idx].id, 'keyup', this.calculateCheck, this, true);
+		slikcalc.addListener(this.rows[idx].id, 'keyup', this.calculateCheck, this);
 	}	
 };
 
@@ -74,7 +74,7 @@ slikcalc.ColumnCalc.prototype.registerListeners = function() {
 slikcalc.ColumnCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};
 	if(rowConfig.checkbox !== undefined) {
-		YAHOO.util.Event.addListener(rowConfig.checkbox.id, 'click', this.calculate, this, true);
+		slikcalc.addListener(rowConfig.checkbox.id, 'click', this.calculate, this);
 		rowConfig.checkbox.invert = rowConfig.checkbox.invert || false;
 	}
 	this.rows.push(rowConfig);

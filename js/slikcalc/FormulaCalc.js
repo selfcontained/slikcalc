@@ -24,7 +24,7 @@ slikcalc.FormulaCalc = function(config) {
 	this.rows = [];
 	this.variables = [];
     this.registerListeners = config.registerListeners || false;
-	YAHOO.util.Event.addListener(window, 'load', this.initialize, this, true);
+	slikcalc.addOnLoad(this.initialize, this);
 	if(config.vars !== undefined) {
 		this.addRow({ vars : config.vars });
 	}
@@ -51,7 +51,7 @@ slikcalc.FormulaCalc.prototype.initialize = function() {
 	if(this.formulaParsed.indexOf('=') !== -1) {
 		var formulaSplit = this.formulaParsed.split('=');
 		this.formulaParsed = formulaSplit[0];
-		this.resultVar = this.varMatch.exec(YAHOO.lang.trim(formulaSplit[1]))[1];
+		this.resultVar = this.varMatch.exec(slikcalc.trim(formulaSplit[1]))[1];
 	}
 	this.varMatch.lastIndex = 0;
 	while((result = this.varMatch.exec(this.formulaParsed)) !== null) {
@@ -76,7 +76,7 @@ slikcalc.FormulaCalc.prototype.initialize = function() {
 slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};
 	if(rowConfig.checkbox !== undefined) {
-		YAHOO.util.Event.addListener(rowConfig.checkbox.id, 'click', this.calculate, this, true);
+		slikcalc.addListener(rowConfig.checkbox.id, 'click', this.calculate, this);
 		rowConfig.checkbox.checkedIsOn = rowConfig.checkbox.checkedIsOn || true;
 	}
 	for(var idx in rowConfig.vars) {
@@ -84,7 +84,7 @@ slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 		variable.defaultValue = variable.defaultValue || 0;
         rowConfig.registerListeners = rowConfig.registerListeners === true || (this.registerListeners === true && rowConfig.registerListeners !== false);
 		if(rowConfig.registerListeners === true) {
-			YAHOO.util.Event.addListener(variable.id, 'keypress', this.calculateCheck, this, true);
+			slikcalc.addListener(variable.id, 'keypress', this.calculateCheck, this);
 		}
 	}
 	this.rows.push(rowConfig);
@@ -99,7 +99,7 @@ slikcalc.FormulaCalc.prototype.calculate = function() {
 		var includeRow = true;
 		if(this.rows[idx].checkbox !== undefined) {
 			var checkbox = this.rows[idx].checkbox;
-			includeRow = (checkbox.checkedIsOn === YAHOO.util.Dom.get(checkbox.id).checked);
+			includeRow = (checkbox.checkedIsOn === slikcalc.get(checkbox.id).checked);
 		}
 		var rowTotal = 0;
 
@@ -108,7 +108,7 @@ slikcalc.FormulaCalc.prototype.calculate = function() {
 			var variableName = this.variables[varIdx];
 			var variable = this.rows[idx].vars[variableName];
 			var value = variable.defaultValue;
-			if(YAHOO.util.Dom.get(variable.id) !== null) {
+			if(slikcalc.get(variable.id) !== null) {
 				value = slikcalc.getValue(variable.id);
 				value = value === '' ? variable.defaultValue : value;
 				value = slikcalc.formatCurrency(value);
