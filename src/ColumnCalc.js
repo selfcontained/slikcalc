@@ -35,21 +35,22 @@ slikcalc.ColumnCalc.prototype.rows = null;
 slikcalc.ColumnCalc.prototype.calculate = function() {
 	var total = 0.00;
 	for(var idx in this.rows) {
-		
-		var includeRow = true;
-		if(this.rows[idx].checkbox !== undefined) {
-			var checkbox = this.rows[idx].checkbox;
-			var checked = slikcalc.get(checkbox.id).checked;
-			includeRow = (checkbox.invert !== checked);
-			
-			/**
-			invert == false && checked == true
-			invert == true && checked == false
-			*/
-		}
-		if(includeRow === true) {
-			if(this.operator === '+') {
-				total = total + slikcalc.getAmount(this.rows[idx].id);
+		if(this.rows.hasOwnProperty(idx)) {
+			var includeRow = true;
+			if(this.rows[idx].checkbox !== undefined) {
+				var checkbox = this.rows[idx].checkbox;
+				var checked = slikcalc.get(checkbox.id).checked;
+				includeRow = (checkbox.invert !== checked);
+				
+				/**
+				invert == false && checked == true
+				invert == true && checked == false
+				*/
+			}
+			if(includeRow === true) {
+				if(this.operator === '+') {
+					total = total + slikcalc.getAmount(this.rows[idx].id);
+				}
 			}
 		}
 	}
@@ -59,7 +60,9 @@ slikcalc.ColumnCalc.prototype.calculate = function() {
 
 slikcalc.ColumnCalc.prototype.registerListeners = function() {
 	for(var idx in this.rows) {
-		slikcalc.addListener(this.rows[idx].id, 'keyup', this.calculateCheck, this);
+		if(this.rows.hasOwnProperty(idx)) {
+			slikcalc.addListener(this.rows[idx].id, 'keyup', this.calculateCheck, this);
+		}
 	}	
 };
 

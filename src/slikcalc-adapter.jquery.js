@@ -21,24 +21,19 @@ slikcalc.adapter = {
 	createCustomEvent : function(eventType) {
 		return {
             type: eventType,
-            listener: null,
             scope: null
         };
 	},
 	
 	bindEvent : function(event, method, scope) {
-        event.listener = method;
         event.scope = scope;
-		jQuery(scope).bind(event.type, function(ev, scopeObj, methodObj) {
+		jQuery(scope).bind(event.type, function() {
             method.call(scope);
 		});
 	},
 	
 	fireEvent : function(event) {
 		jQuery(event.scope).trigger(event.type);
-	},
-	
-	extend : function(originalObj, superObj) {
-		jQuery.extend(originalObj, superObj);
-	}	
+	}
+    
 }

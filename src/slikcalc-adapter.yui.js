@@ -22,10 +22,6 @@ slikcalc.adapter = {
 	
 	fireEvent : function(event) {
 		event.fire();
-	},
-	
-	extend : function(originalObj, superObj) {
-		YAHOO.lang.extend(originalObj, superObj);
 	}
 	
 }

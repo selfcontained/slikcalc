@@ -80,12 +80,14 @@ slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 		rowConfig.checkbox.checkedIsOn = rowConfig.checkbox.checkedIsOn || true;
 	}
 	for(var idx in rowConfig.vars) {
-		var variable = rowConfig.vars[idx];
-		variable.defaultValue = variable.defaultValue || 0;
-        rowConfig.registerListeners = rowConfig.registerListeners === true || (this.registerListeners === true && rowConfig.registerListeners !== false);
-		if(rowConfig.registerListeners === true) {
-			slikcalc.addListener(variable.id, 'keyup', this.calculateCheck, this);
-		}
+        if(rowConfig.vars.hasOwnProperty(idx)) {
+            var variable = rowConfig.vars[idx];
+            variable.defaultValue = variable.defaultValue || 0;
+            rowConfig.registerListeners = rowConfig.registerListeners === true || (this.registerListeners === true && rowConfig.registerListeners !== false);
+            if(rowConfig.registerListeners === true) {
+                slikcalc.addListener(variable.id, 'keyup', this.calculateCheck, this);
+            }
+        }
 	}
 	this.rows.push(rowConfig);
 };
@@ -96,41 +98,45 @@ slikcalc.FormulaCalc.prototype.calculate = function() {
 	}
 	var total = 0.00;
 	for(var idx in this.rows) {
-		var includeRow = true;
-		if(this.rows[idx].checkbox !== undefined) {
-			var checkbox = this.rows[idx].checkbox;
-			includeRow = (checkbox.checkedIsOn === slikcalc.get(checkbox.id).checked);
-		}
-		var rowTotal = 0;
-
-		var formulaString = this.formulaParsed;
-		for(var varIdx in this.variables) {
-			var variableName = this.variables[varIdx];
-			var variable = this.rows[idx].vars[variableName];
-			var value = variable.defaultValue;
-			if(slikcalc.get(variable.id) !== null) {
-				value = slikcalc.getValue(variable.id);
-				value = value === '' ? variable.defaultValue : value;
-				value = slikcalc.formatCurrency(value);
-			}
-			var variableRegex = new RegExp("\\{" + variableName + "\\}");
-			formulaString = formulaString.replace(variableRegex, value);
-		}
-		rowTotal = slikcalc.formatCurrency(eval(formulaString));
-		if(this.resultVar !== null) {
-			var resultId = this.rows[idx].vars[this.resultVar].id;
-			var currentAmount = slikcalc.getValue(resultId);
-			if(currentAmount != rowTotal) {
-				slikcalc.setAmount(resultId, rowTotal);
-			}
-		}
-		if(includeRow === true) {
-			if(this.totalOperator !== null) {
-				if(this.totalOperator === '+') {
-					total = total + parseFloat(rowTotal);
-				}
-			}
-		}
+        if(this.rows.hasOwnProperty(idx)) {
+            var includeRow = true;
+            if(this.rows[idx].checkbox !== undefined) {
+                var checkbox = this.rows[idx].checkbox;
+                includeRow = (checkbox.checkedIsOn === slikcalc.get(checkbox.id).checked);
+            }
+            var rowTotal = 0;
+    
+            var formulaString = this.formulaParsed;
+            for(var varIdx in this.variables) {
+                if(this.variables.hasOwnProperty(varIdx)) {
+                    var variableName = this.variables[varIdx];
+                    var variable = this.rows[idx].vars[variableName];
+                    var value = variable.defaultValue;
+                    if(slikcalc.get(variable.id) !== null) {
+                        value = slikcalc.getValue(variable.id);
+                        value = value === '' ? variable.defaultValue : value;
+                        value = slikcalc.formatCurrency(value);
+                    }
+                    var variableRegex = new RegExp("\\{" + variableName + "\\}");
+                    formulaString = formulaString.replace(variableRegex, value);
+                }
+            }
+            rowTotal = slikcalc.formatCurrency(eval(formulaString));
+            if(this.resultVar !== null) {
+                var resultId = this.rows[idx].vars[this.resultVar].id;
+                var currentAmount = slikcalc.getValue(resultId);
+                if(currentAmount != rowTotal) {
+                    slikcalc.setAmount(resultId, rowTotal);
+                }
+            }
+            if(includeRow === true) {
+                if(this.totalOperator !== null) {
+                    if(this.totalOperator === '+') {
+                        total = total + parseFloat(rowTotal);
+                    }
+                }
+            }
+        }
 	}
 	if(this.totalId !== null) {
 		slikcalc.setAmount(this.totalId, total);
