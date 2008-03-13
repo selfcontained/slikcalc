@@ -84,7 +84,7 @@ slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 		variable.defaultValue = variable.defaultValue || 0;
         rowConfig.registerListeners = rowConfig.registerListeners === true || (this.registerListeners === true && rowConfig.registerListeners !== false);
 		if(rowConfig.registerListeners === true) {
-			slikcalc.addListener(variable.id, 'keypress', this.calculateCheck, this);
+			slikcalc.addListener(variable.id, 'keyup', this.calculateCheck, this);
 		}
 	}
 	this.rows.push(rowConfig);

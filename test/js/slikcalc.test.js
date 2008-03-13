@@ -195,4 +195,4 @@ slikcalc.tests = {
 	}
 	
 };
-slikcalc.addListener(window, 'load', slikcalc.tests.initialize, slikcalc.tests);
+slikcalc.addOnLoad(slikcalc.tests.initialize, slikcalc.tests);

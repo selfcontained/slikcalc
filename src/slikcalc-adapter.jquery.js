@@ -5,41 +5,37 @@ slikcalc.adapter = {
 	},
 	
 	addListener : function(id, type, method, scope) {
-		jQuery('#'+id).bind(type, function() {
-			if(scope !== undefined) {
-				method.call(scope);
-			}else {
-				method.call();
-			}
-		});
+        this.addOnLoad(function() {
+            jQuery('#'+id).bind(type, function() {
+                method.call(scope);
+            });
+        });
 	},
 	
 	addOnLoad : function(method, scope) {
 		jQuery(function() {
-			if(scope !== undefined) {
-				method.call(scope);
-			}else {
-				method.call();
-			}
+			method.call(scope);
 		});
 	},
 	
 	createCustomEvent : function(eventType) {
-		return eventType;
+		return {
+            type: eventType,
+            listener: null,
+            scope: null
+        };
 	},
 	
 	bindEvent : function(event, method, scope) {
-		jQuery(document).bind(event, function() {
-			if(scope !== undefined) {
-				method.call(scope);
-			}else {
-				method.call();
-			}
+        event.listener = method;
+        event.scope = scope;
+		jQuery(scope).bind(event.type, function(ev, scopeObj, methodObj) {
+            method.call(scope);
 		});
 	},
 	
 	fireEvent : function(event) {
-		jQuery(document).trigger(event);
+		jQuery(event.scope).trigger(event.type);
 	},
 	
 	extend : function(originalObj, superObj) {
