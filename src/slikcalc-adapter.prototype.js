@@ -1,5 +1,7 @@
 slikcalc.adapter = {
 
+	eventTopicCounter : 0,
+	
 	get : function(id) {
 		var element = $(id);
         return element;
@@ -7,6 +9,7 @@ slikcalc.adapter = {
 	
 	addListener : function(id, type, method, scope) {
         this.addOnLoad(function() {
+        	console.log(id + ' : listener added');
             $(id).observe(type, function() {
                method.call(scope); 
             });
@@ -14,27 +17,26 @@ slikcalc.adapter = {
 	},
 	
 	addOnLoad : function(method, scope) {
-		Element.observe(window, 'load', function() {
+		Event.observe(window, 'load', function() {
             method.call(scope);
         });
 	},
 	
 	createCustomEvent : function(eventType) {
+		this.eventTopicCounter = this.eventTopicCounter + 1;
 		return {
-            event: 'slikcalc:' + eventType,
-            scope: null
-        }
+			topic: "slikcalc:" + eventType + this.eventTopicCounter
+		}
 	},
 	
 	bindEvent : function(event, method, scope) {
-        event.scope = scope;
-        Element.observe(scope, event.type, function() {
+        document.observe(event.topic, function() {
             method.call(scope);    
         });
 	},
 	
 	fireEvent : function(event) {
-		event.scope.fire(event.type);
+		document.fire(event.topic);
 	}
     
 }
