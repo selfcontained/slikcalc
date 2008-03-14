@@ -112,4 +112,4 @@ slikcalc = {
 		subc.prototype.parent.constructor = superc;
 	}
 	
-}
+};
