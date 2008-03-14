@@ -3,20 +3,24 @@ slikcalc.adapter = {
 	eventTopicCounter : 0,
 	
 	get : function(id) {
-		var element = $(id);
-        return element;
+		return $(id);
 	},
 	
 	addListener : function(id, type, method, scope) {
-        this.addOnLoad(function() {
-        	console.log(id + ' : listener added');
-            $(id).observe(type, function() {
+		if(this.get(id) === null) {
+			this.addOnLoad(function() {
+	            $(id).observe(type, function() {
+	               method.call(scope); 
+	            });
+	        });
+		}else {
+			$(id).observe(type, function() {
                method.call(scope); 
             });
-        });
+		}
 	},
 	
-	addOnLoad : function(method, scope) {
+	addOnLoad : function(method, scope, element) {
 		Event.observe(window, 'load', function() {
             method.call(scope);
         });
