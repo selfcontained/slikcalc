@@ -23,15 +23,15 @@ slikcalc.ColumnCalc = function(config) {
 		slikcalc.addOnLoad(this.calculate, this);
 	}
 };
-slikcalc.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc)
+slikcalc.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc);
 
-/**
- * @prototype
- */
 slikcalc.ColumnCalc.prototype.config = null;
 slikcalc.ColumnCalc.prototype.operator = null;
 slikcalc.ColumnCalc.prototype.rows = null;
 
+/**
+ * Processes the rows and applies the 'config.operator' upon each value, placing the total in the 'config.totalId' element
+ */
 slikcalc.ColumnCalc.prototype.calculate = function() {
 	var total = 0.00;
 	for(var idx in this.rows) {
@@ -58,10 +58,17 @@ slikcalc.ColumnCalc.prototype.calculate = function() {
 	slikcalc.fireEvent(this.calculationComplete);
 };
 
+/**
+ * Adds event listeners for row checkboxes and inputs
+ */
 slikcalc.ColumnCalc.prototype.registerListeners = function() {
 	for(var idx in this.rows) {
 		if(this.rows.hasOwnProperty(idx)) {
-			slikcalc.addListener(this.rows[idx].id, 'keyup', this.calculateCheck, this);
+			var rowConfig = this.rows[idx];
+			if(rowConfig.checkbox !== undefined) {
+				slikcalc.addListener(rowConfig.checkbox.id, 'click', this.calculate, this);
+			}
+			slikcalc.addListener(rowConfig.id, 'keyup', this.calculateCheck, this);
 		}
 	}	
 };
@@ -70,14 +77,13 @@ slikcalc.ColumnCalc.prototype.registerListeners = function() {
  * @param	config[id]						(Required) Element id that holds the value to calculate
  * @param	config[checkbox]				(Optional) Checkbox object that defines the behavior of a checkbox
  * @param	config[checkbox][id]			(Optional) Element id of checkbox. Required if config[checkbox] included.
- * @param	config[checkbox][invert]	(Optional) (default)true/false If true, row is only calculated if checkbox is checked
+ * @param	config[checkbox][invert]		(Optional) true/false(default) If true, row is included in total calculcation when un-checked, and omitted when checked.
  * 
  * Adds a row config object to this.rows
  */
 slikcalc.ColumnCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};
 	if(rowConfig.checkbox !== undefined) {
-		slikcalc.addListener(rowConfig.checkbox.id, 'click', this.calculate, this);
 		rowConfig.checkbox.invert = rowConfig.checkbox.invert || false;
 	}
 	this.rows.push(rowConfig);
