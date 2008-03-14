@@ -1,5 +1,5 @@
 /**
- * @class jsi.widgets.calc.BaseCalc
+ * @class slikcalc.BaseCalc
  * Base Calculator class.  Defines base utility methods for Calculator objects along with a common interface for extending.
  */
  
@@ -10,9 +10,6 @@ slikcalc.BaseCalc = function() {
 	this.calculationComplete = slikcalc.createCustomEvent('calculationComplete');
 };
 
-/**
- * @prototype
- */
 slikcalc.BaseCalc.prototype = {
 
 	calculationComplete : null,
@@ -53,6 +50,9 @@ slikcalc.BaseCalc.prototype = {
 		}, 700);
 	},
 	
+	/**
+	 * Abstract method to be implemented in sub-classes.
+	 */
 	calculate : function() {
 		throw new Error('Must implement calculate method in sub-class of BaseCalc');
 	}
