@@ -31,9 +31,6 @@ slikcalc.FormulaCalc = function(config) {
 };
 slikcalc.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
 
-/**
- * @prototype
- */
 slikcalc.FormulaCalc.prototype.calcOnLoad = false;
 slikcalc.FormulaCalc.prototype.registerListeners = false;
 slikcalc.FormulaCalc.prototype.initialized = false;
@@ -45,6 +42,9 @@ slikcalc.FormulaCalc.prototype.resultVar = null;
 slikcalc.FormulaCalc.prototype.varMatch = /\{(\w)\}/gi;
 slikcalc.FormulaCalc.prototype.rows = null;
 
+/**
+ * Method run on page load to parse the formula, and pull out variables within it.
+ */
 slikcalc.FormulaCalc.prototype.initialize = function() {
 	this.initialized = true;
 	this.formulaParsed = this.formula;
@@ -92,6 +92,9 @@ slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 	this.rows.push(rowConfig);
 };
 
+/**
+ * Processes the rows and applies the formula to each one.
+ */
 slikcalc.FormulaCalc.prototype.calculate = function() {
 	if(this.initialized === false) {
 		this.initialize();
