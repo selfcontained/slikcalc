@@ -48,6 +48,7 @@ slikcalc = {
 	},
 	
 	formatCurrency : function(num) {
+		num = num === null ? 0.00 : num;
 	    num = num.toString().replace(/\$|\,/g,'');
         if(isNaN(num)) {
             num = "0";

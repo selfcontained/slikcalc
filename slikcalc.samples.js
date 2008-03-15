@@ -40,6 +40,27 @@
 	});
 	columnCalc1.addRow({ id: 'cc-1-1' });
 	columnCalc1.addRow({ id: 'cc-1-2' });
-	columnCalc1.addRow({ id: 'cc-1-3' });
+	columnCalc1.addRow({
+		id: 'cc-1-3',
+		checkbox: { id: 'cc-1-3-c' } 
+	});
+	var columnCalc2 = new slikcalc.ColumnCalc({
+		totalId: 'cc-2-total',
+		registerListeners: true,
+		calcOnLoad: true,
+		totalOperator: '*'
+	});
+	columnCalc2.addRow({ id: 'cc-2-1' });
+	columnCalc2.addRow({ id: 'cc-2-2' });
+	columnCalc2.addRow({
+		id: 'cc-2-3',
+		checkbox: { 
+			id: 'cc-2-3-c', 
+			invert: true
+		} 
+	});
 	
+	new YAHOO.widget.TabView('columnCalcTabs');
+	new YAHOO.widget.TabView('formulaCalcTabs');
+	new YAHOO.widget.TabView('customCalcTabs');
 })();

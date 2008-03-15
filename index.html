@@ -5,18 +5,31 @@
 
 	<link rel="stylesheet" type="text/css" href="css/fonts-min.css" />
 	<link rel="stylesheet" type="text/css" href="css/slikcalc.css" />
+	<link rel="stylesheet" type="text/css" href="css/tabview-core.css" />
+	<link rel="stylesheet" type="text/css" href="js/shjs_css/sh_whatis.css" />
 	
 	<script type="text/javascript" src="lib/yahoo-dom-event.js"></script>
+	
 	<script type="text/javascript" src="src/slikcalc.js"></script>
 	<script type="text/javascript" src="src/BaseCalc.js"></script>
 	<script type="text/javascript" src="src/ColumnCalc.js"></script>
 	<script type="text/javascript" src="src/FormulaCalc.js"></script>
+	
 	<script type="text/javascript" src="src/slikcalc-adapter.yui.js"></script>
 	
-	<script type="text/javascript" src="slikcalc.samples.js"></script>
+	<script type="text/javascript" src="js/element-beta-min.js"></script>
+	<script type="text/javascript" src="js/tabview.js"></script>
 	
+	<script type="text/javascript" src="slikcalc.samples.js"></script>
+	<script type="text/javascript" src="js/sh_main.min.js"></script>
+	<script type="text/javascript" src="js/sh_javascript.min.js"></script>
+
+	<script type="text/javascript">
+		slikcalc.addOnLoad(sh_highlightDocument);
+	</script>
 </head>
-<body>
+<body >
+
 <div id="outer-container">
 	<div id="container">
 		<div id="header">
@@ -32,6 +45,7 @@
 				+  = <span id="header-totals"></span>
 			</div>
 		</div>
+
 		<h1>Slikcalc</h1>
 		<p>
 			Slikcalc is a small javascript framework that makes it easy to add dynamic and static mathematical calculations to your html pages.  Slikcalc is built to work in conjunction with any of the big javascript libraries out there.
@@ -49,6 +63,7 @@
 		<div id="download">
 			<a href="http://code.google.com/p/slikcalc/downloads/list"><img src="img/download.gif" align="absmiddle"/></a>
 		</div>
+
 		<p>
 			<h1>How do I use Slikcalc?</h1>
 			<ul>
@@ -64,39 +79,159 @@
 			Setting up Slikcalc is super simple, just <a href="http://code.google.com/p/slikcalc/downloads/list">download the archive</a>, and then include <a href="#libraries">your javascript library of choice</a>, <strong>slikcalc.js</strong>, along with the library-specific adapter.
 			After that, you're ready to begin with either a <a href="#columncalc">ColumnCalc</a> or <a href="#formulacalc">FormulaCalc</a>, or if you're feeling really smart, a <a href="#customcalc">Custom calculator</a>.
 		</p>
-		
-		<p><a name="columncalc"/>
+
+		<p><a name="columncalc"></a>
 			<h1>Column Calculations</h1>
-			
-			
-			<table cellpadding="3" cellspacing="0" class="example-table">
-			<tr>
-				<td class="label">Amount One:</td>
-				<td><input type="text" class="textbox" id="cc-1-1" value="10.23"/></td>
-			</tr>
-			<tr>
-				<td class="label">Amount Two:</td>
-				<td><input type="text" class="textbox" id="cc-1-2" /></td>
-			</tr>
-			<tr>
-				<td class="label">Amount Three:</td>
-				<td><input type="text" class="textbox" id="cc-1-3" /></td>
-			</tr>
-			<tr class="total-row">
-				<td class="label">Total:</td>
-				<td id="cc-1-total">&nbsp;</td>
-			</tr>
-			</table>
+			<div id="columnCalcTabs" class="yui-navset">
+			    <ul class="yui-nav">
+			        <li class="selected"><a href="#tab1"><em>Description</em></a></li>
+			        <li><a href="#tab2"><em>Options</em></a></li>
+			        <li><a href="#tab3"><em>Examples</em></a></li>
+			    </ul>            
+			    <div class="yui-content">
+			        <div id="tab1">
+			        	Column calculators are for when you have a collection of values that you want to apply a mathematical computation to, such as summing them, or multiplying them together.
+						Usage includes creating a new ColumnCalc object, which can take configuration options, and then call the addRow() method for each value you want to add, which can also take configuration options.
+			        </div>
+			        <div id="tab2">
+			        	Constructor options:
+						<ul>
+							<li><label>'totalId'</label> : (Required) Element ID to place end result of column calculation</li>
+							<li><label>'totalOperator'</label> : (Optional) ( +, -, *, x, / ) Mathematical operator to apply against each column to produce end result.  Defaults to '+'</li>
+							<li><label>'registerListeners'</label> : (Optional) true/false(default) If true, event listeners are attached to inputs that fire the calculate method</li>
+							<li><label>'calcOnLoad'</label> : (Optional) true/false(default) If true, on page load the calculate method is fired.</li>
+						</ul>
+
+						addRow() options:
+						<ul>
+							<li><label>'id'</label> : Element id that holds the value to calculate</li>
+							<li><label>'checkbox'</label> : Checkbox object that defines the behavior of a checkbox</li>
+							<li><label>'checkbox.id'</label> : Element id of checkbox. Required if 'checkbox' included</li>
+							<li><label>'checkbox.invert'</label> : true/false(default) If true, row is included in total calculcation when un-checked, and omitted when checked.</li>
+						</ul>
+			        </div>
+			        <div id="tab3">
+						<h2>Addition Column Calc</h2>
+<div class="code-example"><pre class="sh_javascript">
+var columnCalc1 = new slikcalc.ColumnCalc({
+	totalId: 'cc-1-total',
+	registerListeners: true,
+	calcOnLoad: true
+});
+columnCalc1.addRow({ id: 'cc-1-1' });
+columnCalc1.addRow({ id: 'cc-1-2' });
+columnCalc1.addRow({
+	id: 'cc-1-3',
+	checkbox: { id: 'cc-1-3-c' } 
+});</pre></div>
+						<div class="example">
+				        	<table cellpadding="3" cellspacing="0" class="example-table" >
+							<tr>
+								<td></td>
+								<td class="label">Amount One:</td>
+								<td><input type="text" class="textbox" id="cc-1-1" value="10.23"/></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td class="label">Amount Two:</td>
+								<td id="cc-1-2">7.29</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" id="cc-1-3-c" /></td>
+								<td class="label">Amount Three:</td>
+								<td><input type="text" class="textbox" id="cc-1-3" value="17.62"/></td>
+							</tr>
+							<tr class="total-row">
+								<td>&nbsp;</td>
+								<td class="label">Total:</td>
+								<td id="cc-1-total">&nbsp;</td>
+							</tr>
+							</table>
+						</div>
+						<div class="example-description">
+							This calculator adds up each row in the column.  The second row shows that you can include non-editable fields that contain plain text.  The third row uses a checkbox that controls if the row is included in the total calculation.
+						</div>
+						<div style="clear:left;"></div><br clear="all"/>
+						<h2>Multipy Column Calc</h2>
+<div class="code-example"><pre class="sh_javascript">
+var columnCalc1 = new slikcalc.ColumnCalc({
+	totalId: 'cc-1-total',
+	registerListeners: true,
+	calcOnLoad: true
+});
+columnCalc1.addRow({ id: 'cc-1-1' });
+columnCalc1.addRow({ id: 'cc-1-2' });
+columnCalc1.addRow({
+	id: 'cc-1-3',
+	checkbox: { id: 'cc-1-3-c' } 
+});</pre></div>
+						<div class="example">
+				        	<table cellpadding="3" cellspacing="0" class="example-table" >
+							<tr>
+								<td></td>
+								<td class="label">Amount One:</td>
+								<td><input type="text" class="textbox" id="cc-2-1" value="10.23"/></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td class="label">Amount Two:</td>
+								<td><input type="text" class="textbox" id="cc-2-2" value="7.29"/></td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" id="cc-2-3-c" /></td>
+								<td class="label">Amount Three:</td>
+								<td><input type="text" class="textbox" id="cc-2-3" value="17.62"/></td>
+							</tr>
+							<tr class="total-row">
+								<td>&nbsp;</td>
+								<td class="label">Total:</td>
+								<td id="cc-2-total">&nbsp;</td>
+							</tr>
+							</table>
+						</div>
+						<div class="example-description">
+							This calculator adds up each row in the column.  The second row shows that you can include non-editable fields that contain plain text.  The third row uses a checkbox that controls if the row is included in the total calculation.
+						</div>
+			        </div>
+			    </div>
+			</div>
 		</p>
-		
-		<p><a name="formulacalc"/>
+		<p><a name="formulacalc"></a>
 			<h1>Formula Calculations</h1>
-			
+			<div id="formulaCalcTabs" class="yui-navset">
+			    <ul class="yui-nav">
+			        <li class="selected"><a href="#formula-tab1"><em>Description</em></a></li>
+			        <li><a href="#formula-tab2"><em>Options</em></a></li>
+			        <li><a href="#formula-tab3"><em>Examples</em></a></li>
+			    </ul>            
+			    <div class="yui-content">
+			        <div id="formula-tab1">
+			        </div>
+			        <div id="formula-tab2">
+			        </div>
+			        <div id="formula-tab3">
+			        </div>
+			    </div>
+			</div>
 		</p>
 		
-		<p><a name="customcalc"/>
+		<p><a name="customcalc"></a>
 			<h1>Custom Calculations</h1>
-			
+			<div id="customCalcTabs" class="yui-navset">
+			    <ul class="yui-nav">
+			        <li class="selected"><a href="#custom-tab1"><em>Description</em></a></li>
+			        <li><a href="#custom-tab2"><em>Options</em></a></li>
+			        <li><a href="#custom-tab3"><em>Examples</em></a></li>
+			    </ul>            
+			    <div class="yui-content">
+			        <div id="custom-tab1">
+			        </div>
+			        <div id="custom-tab2">
+			        </div>
+			        <div id="custom-tab3">
+			        </div>
+			    </div>
+			</div>
 		</p>
 			<ul>
 				<li>

@@ -1,6 +1,7 @@
 slikcalc.examples = {
 	
 	columnCalc : {},
+	columnCalcSubtract : {},
 	formulaCalc : {},
 	formulaCalcRows : {},
 	
@@ -8,6 +9,7 @@ slikcalc.examples = {
 	
 	initialize : function() {
 		this.setupColumnCalc();
+		this.setupColumnCalcSubtract();
 		this.setupFormulaCalc();
 		this.setupFormulaCalcRows();
 		this.setupChainedCalcs();
@@ -35,6 +37,18 @@ slikcalc.examples = {
 		this.columnCalc.calc.addRow({ 
 			id: 'ex-1-3'
 		});
+	},
+	
+	setupColumnCalcSubtract : function() {
+		this.columnCalcSubtract.calc = new slikcalc.ColumnCalc({
+			totalId: 'cc-sub-total',
+			registerListeners: true,
+			calcOnLoad: true,
+			totalOperator: '-'
+		});
+		this.columnCalcSubtract.calc.addRow({ id: 'cc-sub-1' });
+		this.columnCalcSubtract.calc.addRow({ id: 'cc-sub-2' });
+		this.columnCalcSubtract.calc.addRow({ id: 'cc-sub-3' });
 	},
 	
 	setupFormulaCalc : function() {

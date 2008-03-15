@@ -134,9 +134,7 @@ slikcalc.FormulaCalc.prototype.calculate = function() {
             }
             if(includeRow === true) {
                 if(this.totalOperator !== null) {
-                    if(this.totalOperator === '+') {
-                        total = total + parseFloat(rowTotal);
-                    }
+					total = this.calculateTotal(total, parseFloat(rowTotal));
                 }
             }
         }

@@ -61,6 +61,49 @@ slikcalc.tests = {
 		});
 	},
 	
+	columnCalcTest : function() {
+		return new YAHOO.tool.TestCase({
+			
+			Assert : YAHOO.util.Assert,
+
+		    name: "Subtract Column",
+		
+			calc: slikcalc.examples.columnCalcSubtract.calc,
+			
+			tearDown : function() {
+				slikcalc.setAmount('cc-sub-1', 0.00);
+				slikcalc.setAmount('cc-sub-2', 10.00);
+				slikcalc.setAmount('cc-sub-3', 0.00);
+			},
+
+			testCalcOnLoad : function () {
+				this.Assert.areEqual(-10.00, slikcalc.getAmount('cc-sub-total'), 'Total not set on load');
+			},
+			
+			testCalculatePositive : function() {
+				slikcalc.setAmount('cc-sub-1', 43.16);
+				slikcalc.setAmount('cc-sub-3', 8.49);
+				this.calc.calculate();
+				this.Assert.areEqual(24.67, slikcalc.getAmount('cc-sub-total'), 'Total not set on load');
+			},
+			
+			testCalculateNegative : function() {
+				slikcalc.setAmount('cc-sub-1', 1.00);
+				slikcalc.setAmount('cc-sub-3', 5.50);
+				this.calc.calculate();
+				this.Assert.areEqual(-14.50, slikcalc.getAmount('cc-sub-total'), 'Total not set on load');
+			},
+			
+			testCalculateEmptyValues : function() {
+				slikcalc.setAmount('cc-sub-1', '');
+				slikcalc.setAmount('cc-sub-2', '');
+				slikcalc.setAmount('cc-sub-3', '');
+				this.calc.calculate();
+				this.Assert.areEqual(0.00, slikcalc.getAmount('cc-sub-total'), 'Total not set on load');
+			}
+		});
+	},
+	
 	formulaCalcTest : function() {
 		return new YAHOO.tool.TestCase({
 			

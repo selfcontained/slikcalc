@@ -1,4 +1,4 @@
-/**
+ /**
  * @class ColumnCalc
  * @extends BaseCalc
  * Calculator ojbect for performing column-based calculations
@@ -6,13 +6,15 @@
  
 /**
  * @constructor
- * @param	config[totalId]		(Required) Element ID to place end result of column calculation
- * @param	config[operator]	(Optional) Mathematical operator to apply against each column to produce end result.  Defaults to '+'
+ * @param	config[totalId]				(Required) Element ID to place end result of column calculation
+ * @param	config[totalOperator]		(Optional) ( +, -, *, x, / ) Mathematical operator to apply against each column to produce end result.  Defaults to '+'
+ * @param	config[registerListeners] 	(Optional) true/false(default) If true, event listeners are attached to inputs that fire the calculate method
+ * @param	config[calcOnLoad]			(Optional) true/false(default) If true, on page load the calculate method is fired.
  */
 slikcalc.ColumnCalc = function(config) {
 	this.parent.constructor.call(this);
 	this.config = config || {};
-	this.operator = config.operator || '+';
+	this.totalOperator = config.totalOperator || '+';
 	this.rows = [];
 	config.registerListeners = config.registerListeners || false;
 	if(config.registerListeners === true) {
@@ -26,14 +28,13 @@ slikcalc.ColumnCalc = function(config) {
 slikcalc.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc);
 
 slikcalc.ColumnCalc.prototype.config = null;
-slikcalc.ColumnCalc.prototype.operator = null;
 slikcalc.ColumnCalc.prototype.rows = null;
 
 /**
- * Processes the rows and applies the 'config.operator' upon each value, placing the total in the 'config.totalId' element
+ * Processes the rows and applies the 'config.totalOperator' upon each value, placing the total in the 'config.totalId' element
  */
 slikcalc.ColumnCalc.prototype.calculate = function() {
-	var total = 0.00;
+	var total = null;
 	for(var idx in this.rows) {
 		if(this.rows.hasOwnProperty(idx)) {
 			var includeRow = true;
@@ -48,9 +49,7 @@ slikcalc.ColumnCalc.prototype.calculate = function() {
 				*/
 			}
 			if(includeRow === true) {
-				if(this.operator === '+') {
-					total = total + slikcalc.getAmount(this.rows[idx].id);
-				}
+				total = this.calculateTotal(total, slikcalc.getAmount(this.rows[idx].id));
 			}
 		}
 	}

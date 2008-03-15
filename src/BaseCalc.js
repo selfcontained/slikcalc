@@ -16,7 +16,9 @@ slikcalc.BaseCalc.prototype = {
 	
 	lastKeyUp : null,
 	
-	calculations: 0,
+	calculations : 0,
+	
+	totalOperator : null,
 	
 	/**
 	 * Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
@@ -48,6 +50,32 @@ slikcalc.BaseCalc.prototype = {
 				that.calculate();
 			}
 		}, 700);
+	},
+	
+	/**
+	 * Calculates the total amount, dependant upon the totalOperator value.  Seperated into conditional statements for better performance that using 'eval()'
+	 */
+	calculateTotal : function(total, amount) {
+		if(this.totalOperator === '+') {
+			total = total === null ? 0.00 : total;
+            total = total + amount;
+        }else if(this.totalOperator === '-') {
+			if(total === null) {
+				total = amount;
+			}else {
+				total = total - amount;
+			}
+		}else if(this.totalOperator === '*' || this.totalOperator === 'x') {
+			total = total === null ? 1 : total;
+			total = total * amount;
+		}else if(this.totalOperator === '/') {
+			if(total === null) {
+				total = amount;
+			}else {
+				total = total / amount;
+			}
+		}
+		return total;
 	},
 	
 	/**
