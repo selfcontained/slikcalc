@@ -6,21 +6,98 @@
 	<link rel="stylesheet" type="text/css" href="css/fonts-min.css" />
 	<link rel="stylesheet" type="text/css" href="css/slikcalc.css" />
 	
-	<script type="text/javascript" src="js/yui/utilities.js"></script>
-	<script type="text/javascript" src="js/slikcalc/slikcalc.js"></script>
-	<script type="text/javascript" src="js/slikcalc/BaseCalc.js"></script>
-	<script type="text/javascript" src="js/slikcalc/ColumnCalc.js"></script>
-	<script type="text/javascript" src="js/slikcalc/FormulaCalc.js"></script>
+	<script type="text/javascript" src="lib/yahoo-dom-event.js"></script>
+	<script type="text/javascript" src="src/slikcalc.js"></script>
+	<script type="text/javascript" src="src/BaseCalc.js"></script>
+	<script type="text/javascript" src="src/ColumnCalc.js"></script>
+	<script type="text/javascript" src="src/FormulaCalc.js"></script>
+	<script type="text/javascript" src="src/slikcalc-adapter.yui.js"></script>
+	
+	<script type="text/javascript" src="slikcalc.samples.js"></script>
 	
 </head>
 <body>
 <div id="outer-container">
 	<div id="container">
-		<div id="header"><img src="img/header-logo.gif"/></div>
+		<div id="header">
+			<img src="img/header-logo.gif" style="float: left;"/>
+			<div style="float: left; padding-top: 35px;">
+			( <input type="text" class="textbox" id="header-1-1" /> / <input type="text" class="textbox" id="header-1-2" /> ) + 
+			<input type="text" class="textbox" id="header-1-3" /> = <span id="header-1-total"></span>
+			<br /><br />
+			( <input type="text" class="textbox" id="header-2-1" /> * <input type="text" class="textbox" id="header-2-2" /> ) + 
+			<input type="text" class="textbox" id="header-2-3" /> = <span id="header-2-total"></span>
+			</div>
+			<div style="float: left; margin: 55px 0px 0px 10px;">
+				+  = <span id="header-totals"></span>
+			</div>
+		</div>
 		<h1>Slikcalc</h1>
 		<p>
-			Slikcalc is a jQuery plugin that makes it easy to link a mathematical formula to a group of text inputs, and have them calculate a value.
-			<br /><br />
+			Slikcalc is a small javascript framework that makes it easy to add dynamic and static mathematical calculations to your html pages.  Slikcalc is built to work in conjunction with any of the big javascript libraries out there.
+			The current libraries supported are:
+			<a name="libraries"/>
+			<ul>
+				<li><a href="http://developer.yahoo.com/yui">yui</a></li>
+				<li><a href="http://www.jquery.com">jQuery</a></li>
+				<li><a href="http://dojotoolkit.org/">dojo</a></li>
+				<li><a href="http://mootools.net/">mootools</a></li>
+				<li><a href="http://www.prototypejs.org/">prototype</a></li>
+			</ul>
+			<small>* if a framework you use is not currently supported, its easy to create an adapter to add support, just look at the provided adapters and follow their patterns)</small>
+		</p>
+		<div id="download">
+			<a href="http://code.google.com/p/slikcalc/downloads/list"><img src="img/download.gif" align="absmiddle"/></a>
+		</div>
+		<p>
+			<h1>How do I use Slikcalc?</h1>
+			<ul>
+				<li><a href="#setup">Setup</a></li>
+				<li><a href="#columncalc">Column calculations</a></li>
+				<li><a href="#formulacalc">Formula calculations</a></li>
+				<li><a href="#customcalc">Custom calculations</a></li>
+			</ul>
+		</p>
+		
+		<p><a name="setup"/>
+			<h1>Setup</h1>
+			Setting up Slikcalc is super simple, just <a href="http://code.google.com/p/slikcalc/downloads/list">download the archive</a>, and then include <a href="#libraries">your javascript library of choice</a>, <strong>slikcalc.js</strong>, along with the library-specific adapter.
+			After that, you're ready to begin with either a <a href="#columncalc">ColumnCalc</a> or <a href="#formulacalc">FormulaCalc</a>, or if you're feeling really smart, a <a href="#customcalc">Custom calculator</a>.
+		</p>
+		
+		<p><a name="columncalc"/>
+			<h1>Column Calculations</h1>
+			
+			
+			<table cellpadding="3" cellspacing="0" class="example-table">
+			<tr>
+				<td class="label">Amount One:</td>
+				<td><input type="text" class="textbox" id="cc-1-1" value="10.23"/></td>
+			</tr>
+			<tr>
+				<td class="label">Amount Two:</td>
+				<td><input type="text" class="textbox" id="cc-1-2" /></td>
+			</tr>
+			<tr>
+				<td class="label">Amount Three:</td>
+				<td><input type="text" class="textbox" id="cc-1-3" /></td>
+			</tr>
+			<tr class="total-row">
+				<td class="label">Total:</td>
+				<td id="cc-1-total">&nbsp;</td>
+			</tr>
+			</table>
+		</p>
+		
+		<p><a name="formulacalc"/>
+			<h1>Formula Calculations</h1>
+			
+		</p>
+		
+		<p><a name="customcalc"/>
+			<h1>Custom Calculations</h1>
+			
+		</p>
 			<ul>
 				<li>
 					A formula is written plainly, wrapping variables (inputs) with curly brackets.  The formula, <span>"a * b + c"</span> would translate into <span>"{a} * {b} + {c}"</span>.
@@ -33,184 +110,7 @@
 			</ul>
 			See the examples below for different ways it can be used.
 		</p>
-		<div id="download">
-			<a href="#"><img src="img/download.gif" align="absmiddle"/></a> - <a href="js/slikcalc.js">slikcalc.js</a>
-		</div>
 		
-		<script type="text/javascript">
-			
-			var firstCalc = new ColumnCalc({
-				totalId: 'ex1-total',
-				registerListeners: true,
-				calcOnLoad: true
-			});
-			firstCalc.addRow({ id: 'ex-1-1' });
-			firstCalc.addRow({ id: 'ex-1-2' });
-			firstCalc.addRow({ id: 'ex-1-3' });
-			firstCalc.addRow({ id: 'ex-1-4' });
-		</script>
-		
-		<h2 id="example-1-header">Example 1:</h2>
-		<em>Simple Column Calc</em>
-		<div id="example-1">
-			<table cellpadding="3" cellspacing="0" class="example-table">
-			<tr>
-				<td class="label">Amount One:</td>
-				<td><input type="text" class="textbox" id="ex-1-1" /></td>
-			</tr>
-			<tr>
-				<td class="label">Amount Two:</td>
-				<td><input type="text" class="textbox" id="ex-1-2" /></td>
-			</tr>
-			<tr>
-				<td class="label">Amount Three:</td>
-				<td><input type="text" class="textbox" id="ex-1-3" /></td>
-			</tr>
-			<tr>
-				<td class="label">Amount Three:</td>
-				<td id="ex-1-4">5.75</td>
-			</tr>
-			<tr class="total-row">
-				<td class="label">Total:</td>
-				<td id="ex1-total"></td>
-			</tr>
-			</table>
-		</div>
-		
-		<script type="text/javascript">	
-			var secondCalc = new ColumnCalc({
-				totalId: 'ex2-total',
-				registerListeners: true,
-				calcOnLoad: true
-			});
-			secondCalc.addRow({ 
-				id: 'ex-2-1',
-				checkbox: {
-					id: 'ex-2-1-c'
-				}
-			});
-			secondCalc.addRow({ 
-				id: 'ex-2-2',
-				checkbox: {
-					id: 'ex-2-2-c'
-				}
-			});
-			secondCalc.addRow({ 
-				id: 'ex-2-3',
-				checkbox: {
-					id: 'ex-2-3-c'
-				}
-			});
-			secondCalc.addRow({ 
-				id: 'ex-2-4',
-				checkbox: {
-					id: 'ex-2-4-c',
-					invert: true
-				}
-			});
-		</script>
-		
-		
-		<h2 id="example-2-header">Example 1:</h2>
-		<em>Column Calc w/ checkboxes</em>
-		<div id="example-2">
-			<table cellpadding="3" cellspacing="0" class="example-table">
-			<tr>
-				<td><input type="checkbox" id="ex-2-1-c" /></td>
-				<td class="label">Amount One:</td>
-				<td><input type="text" class="textbox" id="ex-2-1" /></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="ex-2-2-c" /></td>
-				<td class="label">Amount Two:</td>
-				<td><input type="text" class="textbox" id="ex-2-2" /></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="ex-2-3-c" /></td>
-				<td class="label">Amount Three:</td>
-				<td><input type="text" class="textbox" id="ex-2-3" /></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="ex-2-4-c" /></td>
-				<td class="label">Inverted Checkbox Amount:</td>
-				<td id="ex-2-4">5.75</td>
-			</tr>
-			<tr class="total-row">
-				<td class="label" colspan="2">Total:</td>
-				<td id="ex2-total"></td>
-			</tr>
-			</table>
-		</div>
-		
-		<script type="text/javascript">
-			(function() {
-				var calc = new FormulaCalc({
-					formula: '{a} + {b} = {c}',
-					vars: {
-						a: { id: 'formula-1-1' },
-						b: { id: 'formula-1-2' },
-						c: { id: 'formula-1-3'}
-					},
-					registerListeners: true
-				});
-			})();
-		</script>
-		
-		<h2 id="formula-1-header">Example 3:</h2>
-		<em>Simple Formula Calc</em>
-		<div id="formula-1">
-			<input type="text" class="textbox" id="formula-1-1" /> +
-			<input type="text" class="textbox" id="formula-1-2" /> =
-			<span id="formula-1-3"></span>
-		</div>
-		
-
-		<script type="text/javascript">
-			(function() {
-				var calc1 = new ColumnCalc({
-					totalId: 'ex3-1-total',
-					registerListeners: true,
-					calcOnLoad: true
-				});
-				calc1.addRow({ id: 'ex-3-1-1' });
-				calc1.addRow({ id: 'ex-3-1-2' });
-				
-				var calc2 = new ColumnCalc({
-					totalId: 'ex3-2-total',
-					registerListeners: false,
-					calcOnLoad: true
-				});
-				calc2.addRow({ id: 'ex-3-2-1' });
-				calc2.addRow({ id: 'ex-3-2-2' });
-				
-				calc1.triggers(calc2);
-			})();
-		</script>
-		
-		<h2 id="example-3-header">Example 3:</h2>
-		<em>Chained Column Calcs</em>
-		<div id="example-3">
-			<table cellpadding="3" cellspacing="0" class="example-table">
-			<tr>
-				<td class="label">First Calc Amount One:</td>
-				<td><input type="text" class="textbox" id="ex-3-1-1" /></td>
-				<td class="label">Second Calc Amount One:</td>
-				<td><input type="text" class="textbox" id="ex-3-2-1" /></td>
-			</tr>
-			<tr>
-				<td class="label">First Calc Amount Two:</td>
-				<td><input type="text" class="textbox" id="ex-3-1-2" /></td>
-				<td class="label">Second Calc Amount Two:</td>
-				<td><input type="text" class="textbox" id="ex-3-2-2" /></td>
-			</tr>
-			<tr class="total-row">
-				<td class="label" >Total:</td>
-				<td id="ex3-1-total"></td>
-				<td class="label" >Total:</td>
-				<td id="ex3-2-total"></td>
-			</tr>
-			</table>
-		</div>
 		
 	</div>
 </div>
