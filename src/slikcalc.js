@@ -60,7 +60,7 @@ slikcalc = {
         if(cents<10) {
             cents = "0" + cents;
         }
-        return (((sign)?'':'-') + '' + num + '.' + cents);
+        return ( ( (sign) ? '' : '-' ) + '' + num + '.' + cents);
     },
     
     trim : function(string) {
@@ -74,29 +74,34 @@ slikcalc = {
 		return this.adapter.get(id);
 	},
 	
-	addListener : function(elementId, type, method, scope) {
-		if(this.adapter === null) {
+	validateAdapter : function() {
+	    if(this.adapter === null) {
 			throw new Error('slikcalc requires an external javascript library adapter');
 		}
+	},
+	
+	addListener : function(elementId, type, method, scope) {
+		this.validateAdapter();
 		this.adapter.addListener(elementId, type, method, scope);
 	},
 	
 	addOnLoad : function(method, scope) {
-		if(this.adapter === null) {
-			throw new Error('slikcalc requires an external javascript library adapter');
-		}
+		this.validateAdapter();
 		this.adapter.addOnLoad(method, scope);
 	},
 	
 	createCustomEvent : function(eventType) {
+	    this.validateAdapter();
 		return this.adapter.createCustomEvent(eventType);
 	},
 	
 	bindEvent : function(event, method, scope) {
+	    this.validateAdapter();
 		this.adapter.bindEvent(event, method, scope);
 	},
 	
 	fireEvent : function(event) {
+	    this.validateAdapter();
 		this.adapter.fireEvent(event);
 	},
 	

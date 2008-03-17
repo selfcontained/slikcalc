@@ -6,8 +6,16 @@
 /**
  * @constructor
  */
-slikcalc.BaseCalc = function() {
+slikcalc.BaseCalc = function(config) {
+    config.total = config.total || {};
+	this.totalId = config.total.id || null;
+	this.totalOperator = config.total.operator || '+';
+	this.calcOnLoad = config.calcOnLoad || false;
 	this.calculationComplete = slikcalc.createCustomEvent('calculationComplete');
+	this.registerListeners = config.registerListeners || false;
+	if(this.initialize !== undefined && typeof this.initialize === 'function') {
+	    slikcalc.addOnLoad(this.initialize, this);
+	}
 };
 
 slikcalc.BaseCalc.prototype = {
@@ -18,14 +26,20 @@ slikcalc.BaseCalc.prototype = {
 	
 	calculations : 0,
 	
+	totalId : null,
+	
 	totalOperator : null,
+	
+	calcOnLoad : false,
+	
+	registerListeners : false,
 	
 	/**
 	 * Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
 	 * this.calculate will be called after dependCalc.calculate
 	 */
 	dependsOn : function(dependCalc) {
-		slikcalc.bindEvent(dependCalc.calculationComplete, this.calculate, this);
+		slikcalc.bindEvent(dependCalc.calculationComplete, this.processCalculation, this);
 		return dependCalc;
 	},
 	
@@ -34,11 +48,11 @@ slikcalc.BaseCalc.prototype = {
 	 * this.calculate will be called before triggeredCalc.calculate
 	 */
 	triggers : function(triggeredCalc) {
-		slikcalc.bindEvent(this.calculationComplete, triggeredCalc.calculate, triggeredCalc);
+		slikcalc.bindEvent(this.calculationComplete, triggeredCalc.processCalculation, triggeredCalc);
 		return triggeredCalc;
 	},
 	
-	calculateCheck : function() {
+	keyupEvent : function() {
 		this.lastKeyup = new Date().getTime();
 		var that = this;
 		this.calculations = this.calculations + 1;
@@ -47,13 +61,14 @@ slikcalc.BaseCalc.prototype = {
 			var currentTime = new Date().getTime();
 			var difference = currentTime - that.lastKeyup;
 			if(calculation == that.calculations && difference > 600) {
-				that.calculate();
+				that.processCalculation();
 			}
 		}, 700);
 	},
 	
 	/**
-	 * Calculates the total amount, dependant upon the totalOperator value.  Seperated into conditional statements for better performance that using 'eval()'
+	 * Calculates the total amount, dependant upon the totalOperator value.  
+	 * Seperated into conditional statements for better performance than using 'eval(), and to handle operator unique functionality'
 	 */
 	calculateTotal : function(total, amount) {
 		if(this.totalOperator === '+') {
@@ -76,6 +91,11 @@ slikcalc.BaseCalc.prototype = {
 			}
 		}
 		return total;
+	},
+	
+	processCalculation: function() {
+        this.calculate();
+    	slikcalc.fireEvent(this.calculationComplete);
 	},
 	
 	/**

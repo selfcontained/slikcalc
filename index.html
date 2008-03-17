@@ -95,21 +95,23 @@
 						The total of the calculation is inserted into the field identified by one of the options passed into the constructors configuration.
 			        </div>
 			        <div id="tab2">
-			        	Constructor options:
-						<ul>
-							<li><label>'totalId'</label> : (Required) Element ID to place end result of column calculation</li>
-							<li><label>'totalOperator'</label> : (Optional) ( +, -, *, x, / ) Mathematical operator to apply against each column to produce end result.  Defaults to '+'</li>
-							<li><label>'registerListeners'</label> : (Optional) true/false(default) If true, event listeners are attached to inputs that fire the calculate method</li>
-							<li><label>'calcOnLoad'</label> : (Optional) true/false(default) If true, on page load the calculate method is fired.</li>
-						</ul>
-
-						addRow() options:
-						<ul>
-							<li><label>'id'</label> : Element id that holds the value to calculate</li>
-							<li><label>'checkbox'</label> : Checkbox object that defines the behavior of a checkbox</li>
-							<li><label>'checkbox.id'</label> : Element id of checkbox. Required if 'checkbox' included</li>
-							<li><label>'checkbox.invert'</label> : true/false(default) If true, row is included in total calculcation when un-checked, and omitted when checked.</li>
-						</ul>
+			        	<h2>Constructor options</h2>
+<div class="code-example"><pre class="sh_javascript">var columnCalc1 = new slikcalc.ColumnCalc({
+	total: {
+		id: 'totalElementId', //Optional.  Id of the element where the total calculation of a collection of rows will go.
+		operator: '+', //Optional, defaults to '+'. Valid values = ( +, -, *, x, / ).  Mathematical operator used to calculate the total of a collection of rows.
+	},
+	registerListeners: true/false, //Optional, defaults to false.  If true, keyup event listeners will be attached to inputs that will trigger the calculate method.
+	calcOnLoad: true/false //Optional, defaults to false. Causes calculator to perform its calculate function on the page load event
+});</pre></div><div style="clear:left;"></div><br clear="all" />
+						<h2>addRow() options</h2>
+<div class="code-example"><pre class="sh_javascript">columnCalc.addRow({
+	id: 'elementId', //Element id that holds the value to calculate
+	checkbox: {
+		id: 'checkboxId' //Optional.  The id of the checkbox associated with this row.  This controls whether this rows total is included in the calculators total.
+		invert: true/false //Optional, default value is false.  If true, row will NOT be included in the total calculation if checkbox is selected, and will be include if the checkbox is not selected.
+	}
+});</pre></div><div style="clear:left;"></div><br clear="all" />
 			        </div>
 			        <div id="tab3">
 						<h2>Addition Column Calc</h2>
@@ -211,10 +213,124 @@ columnCalc2.addRow({
 			    </ul>            
 			    <div class="yui-content">
 			        <div id="formula-tab1">
+						<p>
+							Formula calcs are more flexible than the Column calcs, and can be used in a few different ways.  The concept behind them is that you define a formula as a string, and then plug in different input fields to match up to the variables in your formula.
+						</p>
+						<p>
+						For example, at the top of this page are two formula calcs, where one is a formula of <strong>'( a / b ) + c = d'</strong>.  Each of the inputs is mapped to one of the variables through configuration.  One slight variation when passing in the formula
+						strings in the constructor, is you have to wrap your variables in curly braces {}.  So the previous formula would look like:
+						</p>
+						<p><strong>'( {a} / {b} ) + {c} = {d}'</strong>. </p>
+						<p>
+							Formula calcs can be configured as one set of inputs mapped to the formula, or as a collection of inputs each mapped to the same formula.  This is useful if you have a table with multiple rows that each need to calculate the same formula.  In this 
+							case you can simply pass the configuration for each row, and optionally, an input to store the total of each row of formulas into.  This total can be a sum of the formula calculations, or any of the other supported operators (+, -, x, *, /).  Note that
+							x and * both multiply the values, but are both included for convenience.
+						</p>
 			        </div>
 			        <div id="formula-tab2">
+						<h2>Constructor options:</h2>
+<div class="code-example"><pre class="sh_javascript">var formulaCalc = new slikcalc.FormulaCalc({
+	formula: '{a} + {b} = {c}', <em>//Required formula string</em>
+	calcOnLoad: true/false, //Optional, defaults to false. Causes calculator to perform its calculate function on the page load event
+	total: {
+		id: 'totalElementId', //Optional.  Id of the element where the total calculation of a collection of rows will go.
+		operator: '+', //Optional, defaults to '+'. Valid values = ( +, -, *, x, / ).  Mathematical operator used to calculate the total of a collection of rows.
+	},
+	registerListeners: true/false, //Optional, defaults to false.  If true, keyup event listeners will be attached to inputs that will trigger the calculate method.
+	vars: {
+		a: { 
+			id: 'first-value', //This would map the input 'header-2-1' to the variable {a} in the formula string
+			defaultValue: 0 //Optional, default is 0. This value is used if there is no value in the mapped input
+	 	},
+		b: { id: 'second-value' }, //This would map the input 'header-2-2' to the variable {b} in the formula string
+		c: { id: 'row-total'} //This would map the input 'header-2-3' to the variable {c} in the formula string
+	}  //Optional.  If a 'vars' configuration is passed in the constructor, it is treated as if you called addRow and passed it in.  This is for convenience when you have only one set of inputs for you calculation.
+});</pre></div><div style="clear:left;"></div><br clear="all"/>
+					<h2>addRow() Options</h2>
+<div class="code-example"><pre class="sh_javascript">formulaCalc.addRow({
+	vars: {
+		a: { 
+			id: 'first-value', //This would map the input 'header-2-1' to the variable {a} in the formula string
+			defaultValue: 0 //Optional, default is 0. This value is used if there is no value in the mapped input
+	 	},
+		b: { id: 'second-value' }, //This would map the input 'header-2-2' to the variable {b} in the formula string
+		c: { id: 'row-total'} //This would map the input 'header-2-3' to the variable {c} in the formula string
+	}, //Required
+	checkbox: {
+		id: 'checkboxId' //Optional.  The id of the checkbox associated with this row.  This controls whether this rows total is included in the calculators total.
+		invert: true/false //Optional, default value is false.  If true, row will NOT be included in the total calculation if checkbox is selected, and will be include if the checkbox is not selected.
+	},
+	registerListeners: true/false //Optional, defaults to false.  If true, keyup event listeners will be attached to inputs that will trigger the calculate method.  This overrides the flag passed in on the constructor.
+});</pre></div>
 			        </div>
 			        <div id="formula-tab3">
+						<h2>Simple Formula Calc</h2>
+<div class="code-example"><pre class="sh_javascript">
+var formulaCalc1 = new slikcalc.FormulaCalc({
+	formula: '( {a} / {b} ) + {c} = {d}',
+	registerListeners: true,
+	calcOnLoad: true,
+	vars: { 
+		a: { id: 'formula-1-1' },
+		b: { id: 'formula-1-2' },
+		c: { id: 'formula-1-3' },
+		d: { id: 'formula-1-total' }
+	}
+});</pre></div>
+						<div class="example" style="padding: 5px;">
+				        	( <input type="text" class="textbox" id="formula-1-1" /> / <input type="text" class="textbox" id="formula-1-2" /> ) + 
+							<input type="text" class="textbox" id="formula-1-3" /> = <span id="formula-1-total"></span>
+						</div>
+						<div class="example-description" style="margin-top: 10px;">
+							This is a basic Formula calculator that calculates <strong>a / b + c</strong> and updates the value into a field.  Since there is only one set of fields for calculation, that <strong>vars</strong> object is passed in the constructor.
+						</div>
+						<div style="clear:left;"></div><br clear="all"/>
+						<h2>Multi-row Formula Calc</h2>
+<div class="code-example"><pre class="sh_javascript">
+var formulaCalc2 = new slikcalc.FormulaCalc({
+	formula: '{a} * {b} = {c}',
+	registerListeners: true,
+	calcOnLoad: true,
+	total: { id: 'formula-2-total' }
+});
+formulaCalc2.addRow({
+    vars: {
+        a: { id: 'formula-2-1a'},
+        b: { id: 'formula-2-1b'},
+        c: { id: 'formula-2-1c'}
+    }
+});
+formulaCalc2.addRow({
+	vars: {
+        a: { id: 'formula-2-2a'},
+        b: { id: 'formula-2-2b'},
+        c: { id: 'formula-2-2c'}
+    },
+    checkbox: { id: 'formula-2-2-c' }
+});</pre></div>
+						<div class="example">
+				        	<table cellpadding="3" cellspacing="0" class="example-table" >
+							<tr>
+								<td></td>
+								<td><input type="text" class="textbox" id="formula-2-1a" value="3"/> x </td>
+								<td><input type="text" class="textbox" id="formula-2-1b" value="7.87"/></td>
+								<td id="formula-2-1c"></td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" id="formula-2-2-c" /></td>
+								<td><input type="text" class="textbox" id="formula-2-2a" value="5"/> x </td>
+								<td><input type="text" class="textbox" id="formula-2-2b" value="2.25"/></td>
+								<td id="formula-2-2c"></td>
+							</tr>
+							<tr class="total-row">
+								<td class="label" colspan="3">Total:</td>
+								<td id="formula-2-total">&nbsp;</td>
+							</tr>
+							</table>
+						</div>
+						<div class="example-description" >
+							This Formula calculator demonstrates using the ability to combine multiple rows of the same formula into one calculator, and have the total of each row summed up into another total.  It also shows how you can add a checkbox to control if that row is included in the total.
+						</div>
 			        </div>
 			    </div>
 			</div>
@@ -230,6 +346,7 @@ columnCalc2.addRow({
 			    </ul>            
 			    <div class="yui-content">
 			        <div id="custom-tab1">
+						Custom calculators are exactly what they sound like, completely custom, and they can do anything you want them to.
 			        </div>
 			        <div id="custom-tab2">
 			        </div>
@@ -237,18 +354,6 @@ columnCalc2.addRow({
 			        </div>
 			    </div>
 			</div>
-		</p>
-			<ul>
-				<li>
-					A formula is written plainly, wrapping variables (inputs) with curly brackets.  The formula, <span>"a * b + c"</span> would translate into <span>"{a} * {b} + {c}"</span>.
-				</li>
-				<li>
-					Those variables are then defined in a config object passed into the slikcalc() function.  
-					The id of the variable's input field must be defined, along with any other optional parameters desired.
-					The variable "a" would be defined as <span>"a : {elementId : 'ex-1-1'}"</span>
-				</li>
-			</ul>
-			See the examples below for different ways it can be used.
 		</p>
 		
 		

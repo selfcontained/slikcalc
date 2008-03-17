@@ -14,17 +14,11 @@
  * 									and {c} becomes the position that the eval'd result is placed into.
  */
 slikcalc.FormulaCalc = function(config) {
-	this.parent.constructor.call(this);
+	this.parent.constructor.call(this, config);
 	config = config || {};
-	this.calcOnLoad = config.calcOnLoad || false;
 	this.formula = config.formula || '';
-    config.total = config.total || {};
-	this.totalId = config.total.id || null;
-	this.totalOperator = config.total.operator || '+';
 	this.rows = [];
 	this.variables = [];
-    this.registerListeners = config.registerListeners || false;
-	slikcalc.addOnLoad(this.initialize, this);
 	if(config.vars !== undefined) {
 		this.addRow({ vars : config.vars });
 	}
@@ -34,8 +28,6 @@ slikcalc.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
 slikcalc.FormulaCalc.prototype.calcOnLoad = false;
 slikcalc.FormulaCalc.prototype.registerListeners = false;
 slikcalc.FormulaCalc.prototype.initialized = false;
-slikcalc.FormulaCalc.prototype.totalId = null;
-slikcalc.FormulaCalc.prototype.totalOperator = null;
 slikcalc.FormulaCalc.prototype.formula = null;
 slikcalc.FormulaCalc.prototype.formulaParsed = null;
 slikcalc.FormulaCalc.prototype.resultVar = null;
@@ -59,7 +51,7 @@ slikcalc.FormulaCalc.prototype.initialize = function() {
 	}
 	this.varMatch.lastIndex = 0;
 	if(this.calcOnLoad === true) {
-		this.calculate();
+		this.processCalculation();
 	}
 };
 
@@ -76,8 +68,8 @@ slikcalc.FormulaCalc.prototype.initialize = function() {
 slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};
 	if(rowConfig.checkbox !== undefined) {
-		slikcalc.addListener(rowConfig.checkbox.id, 'click', this.calculate, this);
-		rowConfig.checkbox.checkedIsOn = rowConfig.checkbox.checkedIsOn || true;
+		slikcalc.addListener(rowConfig.checkbox.id, 'click', this.processCalculation, this);
+		rowConfig.checkbox.invert = rowConfig.checkbox.invert || false;
 	}
 	for(var idx in rowConfig.vars) {
         if(rowConfig.vars.hasOwnProperty(idx)) {
@@ -85,7 +77,7 @@ slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
             variable.defaultValue = variable.defaultValue || 0;
             rowConfig.registerListeners = rowConfig.registerListeners === true || (this.registerListeners === true && rowConfig.registerListeners !== false);
             if(rowConfig.registerListeners === true) {
-                slikcalc.addListener(variable.id, 'keyup', this.calculateCheck, this);
+                slikcalc.addListener(variable.id, 'keyup', this.keyupEvent, this);
             }
         }
 	}
@@ -105,7 +97,7 @@ slikcalc.FormulaCalc.prototype.calculate = function() {
             var includeRow = true;
             if(this.rows[idx].checkbox !== undefined) {
                 var checkbox = this.rows[idx].checkbox;
-                includeRow = (checkbox.checkedIsOn === slikcalc.get(checkbox.id).checked);
+				includeRow = (checkbox.invert !== slikcalc.get(checkbox.id).checked);
             }
             var rowTotal = 0;
     
@@ -142,5 +134,4 @@ slikcalc.FormulaCalc.prototype.calculate = function() {
 	if(this.totalId !== null) {
 		slikcalc.setAmount(this.totalId, total);
 	}
-	slikcalc.fireEvent(this.calculationComplete);
 };

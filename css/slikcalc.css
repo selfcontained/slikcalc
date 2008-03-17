@@ -4,8 +4,14 @@
 body 				{ margin: 0px; padding: 0px; background-color: #000; color: #fff; }
 h1, h2				{ color: #BBB; margin: 10px 0px 5px 0px; }
 .yui-content h2		{ color: #454545; }
-p					{ margin: 0px; }
+p					{ margin: 0px 0px 5px 0px; }
 img					{ border: none; }
+
+a:link,
+a:visited,
+a:active	        { text-decoration: underline; color: #0A74D6; }
+a:hover     	    { text-decoration: underline; color: #004E97; }
+
 
 /**
  * Layout

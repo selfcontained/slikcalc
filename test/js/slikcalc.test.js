@@ -33,28 +33,28 @@ slikcalc.tests = {
 		
 			testCalculateNotChecked : function () {
 				slikcalc.setAmount('ex-1-1', 25.00);
-				this.calc.calculate();
+				this.calc.processCalculation();
 				this.Assert.areEqual(5.00, slikcalc.getAmount('ex1-total'), 'Total not updated');
 			},
 		
 			testCalculateChecked : function() {
 				slikcalc.setAmount('ex-1-1', 25.00);
 				slikcalc.get('ex-1-1-c').checked = true;
-				this.calc.calculate();
+				this.calc.processCalculation();
 				this.Assert.areEqual(30.00, slikcalc.getAmount('ex1-total'), 'Total not updated');
 			},
 			
 			testCalculateInvertNotChecked : function() {
 				slikcalc.get('ex-1-2-c').checked = false;
 				slikcalc.setAmount('ex-1-2', 25);
-				this.calc.calculate();
+				this.calc.processCalculation();
 				this.Assert.areEqual(30.00, slikcalc.getAmount('ex1-total'), 'Total not updated');
 			},
 			
 			testCalculateInvertChecked : function() {
 				slikcalc.get('ex-1-2-c').checked = true;
 				slikcalc.setAmount('ex-1-2', 25);
-				this.calc.calculate();
+				this.calc.processCalculation();
 				this.Assert.areEqual(5.00, slikcalc.getAmount('ex1-total'), 'Total not updated');
 			}
 			
@@ -83,14 +83,14 @@ slikcalc.tests = {
 			testCalculatePositive : function() {
 				slikcalc.setAmount('cc-sub-1', 43.16);
 				slikcalc.setAmount('cc-sub-3', 8.49);
-				this.calc.calculate();
+				this.calc.processCalculation();
 				this.Assert.areEqual(24.67, slikcalc.getAmount('cc-sub-total'), 'Total not set on load');
 			},
 			
 			testCalculateNegative : function() {
 				slikcalc.setAmount('cc-sub-1', 1.00);
 				slikcalc.setAmount('cc-sub-3', 5.50);
-				this.calc.calculate();
+				this.calc.processCalculation();
 				this.Assert.areEqual(-14.50, slikcalc.getAmount('cc-sub-total'), 'Total not set on load');
 			},
 			
@@ -98,7 +98,7 @@ slikcalc.tests = {
 				slikcalc.setAmount('cc-sub-1', '');
 				slikcalc.setAmount('cc-sub-2', '');
 				slikcalc.setAmount('cc-sub-3', '');
-				this.calc.calculate();
+				this.calc.processCalculation();
 				this.Assert.areEqual(0.00, slikcalc.getAmount('cc-sub-total'), 'Total not set on load');
 			}
 		});
@@ -126,13 +126,13 @@ slikcalc.tests = {
 			testCalculate : function() {
 				slikcalc.setAmount('formula-2', 25.00);
 				slikcalc.setAmount('formula-3', 2);
-				this.calc.calculate();
+				this.calc.processCalculation();
 				this.Assert.areEqual(60.00, slikcalc.getAmount('formula-4'), 'Total not updated');
 			},
 			
 			testCalculateDefaultValue : function() {
 				slikcalc.setValue('formula-3', '');
-				this.calc.calculate();
+				this.calc.processCalculation();
 				this.Assert.areEqual(5.00, slikcalc.getAmount('formula-4'), 'Total not updated');
 			}
 			
@@ -158,7 +158,7 @@ slikcalc.tests = {
             testCalculateOneRowChecked : function() {
                 slikcalc.get('formula-rows-1-c').checked = true;
                 slikcalc.setAmount('formula-rows-1-2', 25.00);
-                this.calc.calculate();
+                this.calc.processCalculation();
                 this.Assert.areEqual(30, slikcalc.getAmount('formula-rows-1-4'));
                 this.Assert.areEqual(30, slikcalc.getAmount('formula-rows-total'));
             },
@@ -168,7 +168,7 @@ slikcalc.tests = {
                 slikcalc.get('formula-rows-2-c').checked = true;
                 slikcalc.setAmount('formula-rows-1-2', 25.75);
                 slikcalc.setAmount('formula-rows-2-2', 32.87);
-                this.calc.calculate();
+                this.calc.processCalculation();
                 this.Assert.areEqual(30.75, slikcalc.getAmount('formula-rows-1-4'));
                 this.Assert.areEqual(37.87, slikcalc.getAmount('formula-rows-2-4'));
                 this.Assert.areEqual(68.62, slikcalc.getAmount('formula-rows-total'));
@@ -180,7 +180,7 @@ slikcalc.tests = {
                 slikcalc.get('formula-rows-2-c').checked = true;
                 slikcalc.setAmount('formula-rows-1-2', 25.75);
                 slikcalc.setAmount('formula-rows-2-2', 32.87);
-                this.calc.calculate();
+                this.calc.processCalculation();
                 this.Assert.areEqual(30.75, slikcalc.getAmount('formula-rows-1-4'));
                 this.Assert.areEqual(37.87, slikcalc.getAmount('formula-rows-2-4'));
                 this.Assert.areEqual(37.87, slikcalc.getAmount('formula-rows-total'));
@@ -191,7 +191,7 @@ slikcalc.tests = {
                 slikcalc.get('formula-rows-2-c').checked = false;
                 slikcalc.setAmount('formula-rows-1-2', 25.75);
                 slikcalc.setAmount('formula-rows-2-2', 32.87);
-                this.calc.calculate();
+                this.calc.processCalculation();
                 this.Assert.areEqual(30.75, slikcalc.getAmount('formula-rows-1-4'));
                 this.Assert.areEqual(37.87, slikcalc.getAmount('formula-rows-2-4'));
                 this.Assert.areEqual(0.00, slikcalc.getAmount('formula-rows-total'));
@@ -229,7 +229,7 @@ slikcalc.tests = {
 				slikcalc.setAmount('chained-1-2', 3.28);
 				slikcalc.setAmount('chained-2-1', 7.56);
 				slikcalc.setAmount('chained-2-2', 21.90);
-				this.column1.calculate();
+				this.column1.processCalculation();
 				this.Assert.areEqual(28.28, slikcalc.getAmount('chained-1-total'));
 				this.Assert.areEqual(29.46, slikcalc.getAmount('chained-2-total'));
 				this.Assert.areEqual(57.74, slikcalc.getAmount('chained-3-total'));

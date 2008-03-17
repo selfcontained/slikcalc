@@ -17,7 +17,7 @@ slikcalc.examples = {
 	
 	setupColumnCalc : function() {
 		this.columnCalc.calc = new slikcalc.ColumnCalc({
-			totalId: 'ex1-total',
+			total: { id: 'ex1-total' },
 			registerListeners: true,
 			calcOnLoad: true
 		});
@@ -41,10 +41,12 @@ slikcalc.examples = {
 	
 	setupColumnCalcSubtract : function() {
 		this.columnCalcSubtract.calc = new slikcalc.ColumnCalc({
-			totalId: 'cc-sub-total',
+			total: { 
+			    id: 'cc-sub-total',
+			    operator: '-' 
+			},
 			registerListeners: true,
-			calcOnLoad: true,
-			totalOperator: '-'
+			calcOnLoad: true
 		});
 		this.columnCalcSubtract.calc.addRow({ id: 'cc-sub-1' });
 		this.columnCalcSubtract.calc.addRow({ id: 'cc-sub-2' });
@@ -99,14 +101,14 @@ slikcalc.examples = {
 	
 	setupChainedCalcs : function() {
 		this.chainedCalcs.columnCalc1 = new slikcalc.ColumnCalc({
-			totalId: 'chained-1-total',
+			total: { id: 'chained-1-total' },
 			registerListeners: true,
 			calcOnLoad: true
 		});
 		this.chainedCalcs.columnCalc1.addRow({ id: 'chained-1-1' });
 		this.chainedCalcs.columnCalc1.addRow({ id: 'chained-1-2' });
 		this.chainedCalcs.columnCalc2 = new slikcalc.ColumnCalc({
-			totalId: 'chained-2-total',
+			total: { id: 'chained-2-total' },
 			registerListeners: true
 		});
 		this.chainedCalcs.columnCalc2.addRow({ id: 'chained-2-1' });
