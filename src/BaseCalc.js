@@ -34,6 +34,8 @@ slikcalc.BaseCalc.prototype = {
 	
 	registerListeners : false,
 	
+	keyupDelay: 600,
+	
 	/**
 	 * Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
 	 * this.calculate will be called after dependCalc.calculate
@@ -60,10 +62,10 @@ slikcalc.BaseCalc.prototype = {
 		setTimeout(function() {
 			var currentTime = new Date().getTime();
 			var difference = currentTime - that.lastKeyup;
-			if(calculation == that.calculations && difference > 600) {
+			if(calculation == that.calculations && difference > that.keyupDelay) {
 				that.processCalculation();
 			}
-		}, 700);
+		}, (this.keyupDelay+100));
 	},
 	
 	/**
