@@ -17,7 +17,6 @@ slikcalc.ColumnCalc = function(config) {
 };
 slikcalc.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc);
 
-slikcalc.ColumnCalc.prototype.config = null;
 slikcalc.ColumnCalc.prototype.rows = null;
 
 slikcalc.ColumnCalc.prototype.initialize = function() {
@@ -30,7 +29,7 @@ slikcalc.ColumnCalc.prototype.initialize = function() {
 };
 
 /**
- * Processes the rows and applies the 'config.totalOperator' upon each value, placing the total in the 'config.totalId' element
+ * Processes the rows and applies the totalOperator upon each value, placing the total in the totalId element
  */
 slikcalc.ColumnCalc.prototype.calculate = function() {
 	var total = null;
@@ -39,8 +38,7 @@ slikcalc.ColumnCalc.prototype.calculate = function() {
 			var includeRow = true;
 			if(this.rows[idx].checkbox !== undefined) {
 				var checkbox = this.rows[idx].checkbox;
-				var checked = slikcalc.get(checkbox.id).checked;
-				includeRow = (checkbox.invert !== checked);
+				includeRow = (checkbox.invert !== slikcalc.get(checkbox.id).checked);
 			}
 			if(includeRow === true) {
 				total = this.calculateTotal(total, slikcalc.getAmount(this.rows[idx].id));

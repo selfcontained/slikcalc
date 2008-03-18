@@ -7,7 +7,6 @@ slikcalc.tests = {
         TestRunner.add(this.formulaCalcRowsTest());
 		TestRunner.add(this.chainedCalcRowsTest());
 		var testLogger = new YAHOO.tool.TestLogger();
-        testLogger.hideCategory('info');
 		TestRunner.run();
 	},
 	

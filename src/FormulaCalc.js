@@ -25,14 +25,13 @@ slikcalc.FormulaCalc = function(config) {
 };
 slikcalc.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
 
-slikcalc.FormulaCalc.prototype.calcOnLoad = false;
-slikcalc.FormulaCalc.prototype.registerListeners = false;
 slikcalc.FormulaCalc.prototype.initialized = false;
 slikcalc.FormulaCalc.prototype.formula = null;
 slikcalc.FormulaCalc.prototype.formulaParsed = null;
 slikcalc.FormulaCalc.prototype.resultVar = null;
 slikcalc.FormulaCalc.prototype.varMatch = /\{(\w)\}/gi;
 slikcalc.FormulaCalc.prototype.rows = null;
+slikcalc.FormulaCalc.prototype.variables = null;
 
 /**
  * Method run on page load to parse the formula, and pull out variables within it.
@@ -119,15 +118,10 @@ slikcalc.FormulaCalc.prototype.calculate = function() {
             rowTotal = slikcalc.formatCurrency(eval(formulaString));
             if(this.resultVar !== null) {
                 var resultId = this.rows[idx].vars[this.resultVar].id;
-                var currentAmount = slikcalc.getValue(resultId);
-                if(currentAmount != rowTotal) {
-                    slikcalc.setAmount(resultId, rowTotal);
-                }
+                slikcalc.setAmount(resultId, rowTotal);
             }
-            if(includeRow === true) {
-                if(this.totalOperator !== null) {
-					total = this.calculateTotal(total, parseFloat(rowTotal));
-                }
+            if(includeRow === true && this.totalOperator !== null) {
+				total = this.calculateTotal(total, parseFloat(rowTotal));
             }
         }
 	}
