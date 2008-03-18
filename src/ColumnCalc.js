@@ -1,15 +1,9 @@
- /**
- * @class ColumnCalc
- * @extends BaseCalc
- * Calculator ojbect for performing column-based calculations
- */
- 
 /**
+ * @namespace slikcalc
+ * @class ColumnCalc
+ * @description Calculator ojbect for performing column-based calculations
  * @constructor
- * @param	config[totalId]				(Required) Element ID to place end result of column calculation
- * @param	config[totalOperator]		(Optional) ( +, -, *, x, / ) Mathematical operator to apply against each column to produce end result.  Defaults to '+'
- * @param	config[registerListeners] 	(Optional) true/false(default) If true, event listeners are attached to inputs that fire the calculate method
- * @param	config[calcOnLoad]			(Optional) true/false(default) If true, on page load the calculate method is fired.
+ * @param {object} config				(Required) Configuration object
  */
 slikcalc.ColumnCalc = function(config) {
 	this.parent.constructor.call(this, config);
@@ -19,6 +13,10 @@ slikcalc.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc);
 
 slikcalc.ColumnCalc.prototype.rows = null;
 
+/**
+ * @description Runs on page load.  Processes calculation if calcOnLoad is set to true, and sets up event listeners 
+ * if registerEventListeners is set to true.
+ */
 slikcalc.ColumnCalc.prototype.initialize = function() {
     if(this.calcOnLoad === true) {
         this.processCalculation();
@@ -29,7 +27,7 @@ slikcalc.ColumnCalc.prototype.initialize = function() {
 };
 
 /**
- * Processes the rows and applies the totalOperator upon each value, placing the total in the totalId element
+ * @description Processes the rows and applies the totalOperator upon each value, placing the total in the totalId element
  */
 slikcalc.ColumnCalc.prototype.calculate = function() {
 	var total = null;
@@ -49,7 +47,7 @@ slikcalc.ColumnCalc.prototype.calculate = function() {
 };
 
 /**
- * Adds event listeners for row checkboxes and inputs
+ * @description Adds event listeners for row checkboxes and inputs
  */
 slikcalc.ColumnCalc.prototype.setupEventListeners = function() {
 	for(var idx in this.rows) {
@@ -64,12 +62,10 @@ slikcalc.ColumnCalc.prototype.setupEventListeners = function() {
 };
 
 /**
- * @param	config[id]						(Required) Element id that holds the value to calculate
- * @param	config[checkbox]				(Optional) Checkbox object that defines the behavior of a checkbox
- * @param	config[checkbox][id]			(Optional) Element id of checkbox. Required if config[checkbox] included.
- * @param	config[checkbox][invert]		(Optional) true/false(default) If true, row is included in total calculcation when un-checked, and omitted when checked.
- * 
- * Adds a row config object to this.rows
+ * @description Adds a row to the calculator to be included with calculations.
+ * @param {String}	config[id]						(Required) Element id that holds the value to calculate
+ * @param {String}	config[checkbox][id]			(Optional) Element id of checkbox.
+ * @param {boolean}	config[checkbox][invert]		(Optional) Defaults to false. If true, row is included in total calculcation when un-checked, and omitted when checked.
  */
 slikcalc.ColumnCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};

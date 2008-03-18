@@ -1,10 +1,13 @@
 /**
- * @class slikcalc.BaseCalc
- * Base Calculator class.  Defines base utility methods for Calculator objects along with a common interface for extending.
- */
- 
-/**
+ * @namespace slikcalc
+ * @class BaseCalc
  * @constructor
+ * @description Base Calculator class handles common configuration options, provides utility methods, an interface for extending, 
+ * and runs calculator's initialize method on page load if it exists.
+ * @param {String}	config[total][id]				(Optional) Element ID to place end result of column calculation
+ * @param {String}	config[total][operator]			(Optional) ( +, -, *, x, / ) Mathematical operator to apply against each row to produce end result.  Defaults to '+'
+ * @param {boolean}	config[calcOnLoad]				(Optional) Defaults to false. If true, on page load the calculate method is fired.
+ * @param {boolean}	config[registerListeners] 		(Optional) Defaults to false. If true, event listeners are attached to inputs that fire the calculate method
  */
 slikcalc.BaseCalc = function(config) {
     config.total = config.total || {};

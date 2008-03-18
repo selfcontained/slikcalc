@@ -1,17 +1,13 @@
 /**
+ * @namespace slikcalc
  * @class FormulaCalc
- * @extends BaseCalc
- * Class that calculates the total across multiple rows and updates a single totals value.
- * Calculations are done based on a given formula, and mapped variables.
- */
- 
-/**
+ * @description Calculator object that calculates based on a given formula and mapped variables.  Calculates across multiple rows as well,
+ * updating a single totals value based on a given mathematical operator.
  * @constructor
- * @param	config[total][id]		Element id of where the total value is placed
- * @param	config[total][operator]	Mathematical operator to be applied to each row value, defaults to '+'
- * @param	config[formula]			Mathematical formula in string form.  Variables denoted within the '{}' that map to vars definitions
- *  								passed in on the addRow method.  Example: "{a} + {b} = {c}".  "{a} + {b}" is used as the formula, 
- * 									and {c} becomes the position that the eval'd result is placed into.
+ * @param {String}	config[formula]			(Required) Mathematical formula in string form.  Variables denoted within the '{}' that map to vars definitions
+ * passed in on the addRow method.  Example: "{a} + {b} = {c}".  "{a} + {b}" is used as the formula, 
+ * and {c} becomes the position that the eval'd result is placed into.
+ * @param {object}	config[total][vars]		Variables configuration object, see FormulaCalc.addRow() for details
  */
 slikcalc.FormulaCalc = function(config) {
 	this.parent.constructor.call(this, config);
@@ -34,7 +30,8 @@ slikcalc.FormulaCalc.prototype.rows = null;
 slikcalc.FormulaCalc.prototype.variables = null;
 
 /**
- * Method run on page load to parse the formula, and pull out variables within it.
+ * @description Method run on page load to parse the formula, and pull out variables within it.  
+ * Also processes the calculation if calcOnLoad is true.
  */
 slikcalc.FormulaCalc.prototype.initialize = function() {
 	this.initialized = true;
@@ -55,14 +52,13 @@ slikcalc.FormulaCalc.prototype.initialize = function() {
 };
 
 /**
- * @param	vars							Array of variable definitions used in the formula
- * @param 	vars[x][id]						Element id for variable 'x' in formula
- * @param	vars[x][defaultValue]			Value used in place of empty/null for variable 'x'
- * @param	config[checkbox]				(Optional) Checkbox object that defines the behavior of a checkbox
- * @param	config[checkbox][id]			(Optional) Element id of checkbox. Required if config[checkbox] included.
- * @param	config[checkbox][checkedIsOn]	(Optional) (default)true/false If true, row is only calculated if checkbo
- * 
- * Adds a rowConfig object to this.rows
+ * @description Adds a row to the calculator to be included in the calculations
+ * @param {object}	vars						(Required) Object containing one to many variable definitions
+ * @param {object}	vars[x]						(Required) Configuration object for variable 'x' where x represents a variable in the formula
+ * @param {String}	vars[x][id]					(Required) Element id for the input mappted to variable 'x' in formula
+ * @param {decimal}	vars[x][defaultValue]		(Optional) Value used in place of empty/null for variable 'x'.  Defaults to 0
+ * @param {String}	config[checkbox][id]		(Optional) Element id of checkbox. Required if config[checkbox] included
+ * @param {boolean}	config[checkbox][invert]	(Optional) Defaults to false. If true, row is included in total calculcation when un-checked, and omitted when checked
  */
 slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};
@@ -84,7 +80,7 @@ slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 };
 
 /**
- * Processes the rows and applies the formula to each one.
+ * @description Processes the rows and applies the formula to each one.
  */
 slikcalc.FormulaCalc.prototype.calculate = function() {
 	if(this.initialized === false) {
