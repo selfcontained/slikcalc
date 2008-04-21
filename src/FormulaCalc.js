@@ -21,7 +21,6 @@ slikcalc.FormulaCalc = function(config) {
 };
 slikcalc.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
 
-slikcalc.FormulaCalc.prototype.initialized = false;
 slikcalc.FormulaCalc.prototype.formula = null;
 slikcalc.FormulaCalc.prototype.formulaParsed = null;
 slikcalc.FormulaCalc.prototype.resultVar = null;
@@ -34,7 +33,6 @@ slikcalc.FormulaCalc.prototype.variables = null;
  * Also processes the calculation if calcOnLoad is true.
  */
 slikcalc.FormulaCalc.prototype.initialize = function() {
-	this.initialized = true;
 	this.formulaParsed = this.formula;
 	if(this.formulaParsed.indexOf('=') !== -1) {
 		var formulaSplit = this.formulaParsed.split('=');
@@ -83,9 +81,6 @@ slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
  * @description Processes the rows and applies the formula to each one.
  */
 slikcalc.FormulaCalc.prototype.calculate = function() {
-	if(this.initialized === false) {
-		this.initialize();
-	}
 	var total = 0.00;
 	for(var idx in this.rows) {
         if(this.rows.hasOwnProperty(idx)) {

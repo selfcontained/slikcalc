@@ -16,9 +16,7 @@ slikcalc.BaseCalc = function(config) {
 	this.calcOnLoad = config.calcOnLoad || false;
 	this.calculationComplete = slikcalc.createCustomEvent('calculationComplete');
 	this.registerListeners = config.registerListeners || false;
-	if(this.initialize !== undefined && typeof this.initialize === 'function') {
-	    slikcalc.addOnLoad(this.initialize, this);
-	}
+	slikcalc.addOnLoad(this.baseInitialize, this);
 };
 
 slikcalc.BaseCalc.prototype = {
@@ -39,6 +37,20 @@ slikcalc.BaseCalc.prototype = {
 	
 	keyupDelay: 600,
 	
+	initialized : false,
+	
+	/**
+	 * Base initializing method
+	 */
+	baseInitialize : function() {
+		if(this.initialized === false) {
+			this.initialized = true;
+			if(this.initialize !== undefined && typeof this.initialize === 'function') {
+			    this.initialize();
+			}
+		}
+	},
+	
 	/**
 	 * Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
 	 * this.calculate will be called after dependCalc.calculate
@@ -57,6 +69,9 @@ slikcalc.BaseCalc.prototype = {
 		return triggeredCalc;
 	},
 	
+	/**
+	 * Wrapper method to trigger processCalculation when there is a pause in users key events
+	 */
 	keyupEvent : function() {
 		this.lastKeyup = new Date().getTime();
 		var that = this;
@@ -98,7 +113,13 @@ slikcalc.BaseCalc.prototype = {
 		return total;
 	},
 	
+	/**
+	 * Wrapper method for concrete class' `calculate` method
+	 */
 	processCalculation: function() {
+		if(this.initialized === false) {
+			this.baseInitialize();
+		}
         this.calculate();
     	slikcalc.fireEvent(this.calculationComplete);
 	},
