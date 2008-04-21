@@ -3,7 +3,7 @@
  * http://slikcalc.selfcontained.us
  * Code licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
- * version 1.0b
+ * version 1.0
  */
 var slikcalc;
 if(!slikcalc) {
@@ -13,110 +13,95 @@ if(!slikcalc) {
 }
 
 slikcalc = {
-	
+
 	adapter : null,
-	
+
 	getValue : function(el) {
 		var value = null;
 		var element = this.get(el);
 		if(element !== null) {
-			if(element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
-				value = element.value;
-			}else {
-				value = element.innerHTML;
-			}
+			value = this.isInput(element) ? element.value : element.innerHTML;
 		}
 		return value;
 	},
-	
+
 	setValue : function(el, value) {
 		var element = this.get(el);
 		if(element !== null) {
-			if(element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
+			if(this.isInput(element)) {
 				element.value = value;
 			}else {
 				element.innerHTML = value;
 			}
 		}
 	},
-	
+
 	getAmount : function(el) {
 		var amount = this.getValue(el);
-		if(amount !== null) {
-			amount = parseFloat(this.formatCurrency(amount));
-		}else {
-			amount = parseFloat(this.formatCurrency(0));
-		}
+		amount = amount !== null ? parseFloat(this.formatCurrency(amount)) : parseFloat(this.formatCurrency(0));
 		return amount;
 	},
-	
+
 	setAmount : function(el, value) {
 		this.setValue(el, this.formatCurrency(value));
 	},
-	
+
+	isInput : function(element) {
+		return element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT';
+	},
+
 	formatCurrency : function(num) {
-		num = num === null ? 0.00 : num;
-	    num = num.toString().replace(/\$|\,/g,'');
-        if(isNaN(num)) {
-            num = "0";
-        }
-        var sign = (num == (num = Math.abs(num)));
-        num = Math.floor(num*100+0.50000000001);
-        var cents = num%100;
-        num = Math.floor(num/100).toString();
-        if(cents<10) {
-            cents = "0" + cents;
-        }
-        return ( ( (sign) ? '' : '-' ) + '' + num + '.' + cents);
+		num = isNaN(num) || num === '' ? 0.00 : num;
+		return parseFloat(num).toFixed(2);
     },
-    
+
     trim : function(string) {
 		return string.replace(/^\s+|\s+$/g, '');
 	},
-	
+
 	get : function(id) {
 		if(this.adapter === null) {
 			throw new Error('slikcalc requires an external javascript library adapter');
 		}
 		return this.adapter.get(id);
 	},
-	
+
 	validateAdapter : function() {
 	    if(this.adapter === null) {
 			throw new Error('slikcalc requires an external javascript library adapter');
 		}
 	},
-	
+
 	addListener : function(elementId, type, method, scope) {
 		this.validateAdapter();
 		this.adapter.addListener(elementId, type, method, scope);
 	},
-	
+
 	addOnLoad : function(method, scope) {
 		this.validateAdapter();
 		this.adapter.addOnLoad(method, scope);
 	},
-	
+
 	createCustomEvent : function(eventType) {
 	    this.validateAdapter();
 		return this.adapter.createCustomEvent(eventType);
 	},
-	
+
 	bindEvent : function(event, method, scope) {
 	    this.validateAdapter();
 		this.adapter.bindEvent(event, method, scope);
 	},
-	
+
 	fireEvent : function(event) {
 	    this.validateAdapter();
 		this.adapter.fireEvent(event);
 	},
-	
+
 	extend : function(subc, superc) {
 		if (! superc || ! subc) {
 			throw new Error('slikcalc.extend failed, please check that all dependencies are included.');
 		}
-	
+
 		var F = function() {};
 		F.prototype = superc.prototype;
 		subc.prototype = new F();
@@ -124,7 +109,7 @@ slikcalc = {
 		subc.prototype.parent = superc.prototype;
 		subc.prototype.parent.constructor = superc;
 	}
-	
+
 };
 
 /**
@@ -145,9 +130,7 @@ slikcalc.BaseCalc = function(config) {
 	this.calcOnLoad = config.calcOnLoad || false;
 	this.calculationComplete = slikcalc.createCustomEvent('calculationComplete');
 	this.registerListeners = config.registerListeners || false;
-	if(this.initialize !== undefined && typeof this.initialize === 'function') {
-	    slikcalc.addOnLoad(this.initialize, this);
-	}
+	slikcalc.addOnLoad(this.baseInitialize, this);
 };
 
 slikcalc.BaseCalc.prototype = {
@@ -168,6 +151,20 @@ slikcalc.BaseCalc.prototype = {
 	
 	keyupDelay: 600,
 	
+	initialized : false,
+	
+	/**
+	 * Base initializing method
+	 */
+	baseInitialize : function() {
+		if(this.initialized === false) {
+			this.initialized = true;
+			if(this.initialize !== undefined && typeof this.initialize === 'function') {
+			    this.initialize();
+			}
+		}
+	},
+	
 	/**
 	 * Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
 	 * this.calculate will be called after dependCalc.calculate
@@ -186,6 +183,9 @@ slikcalc.BaseCalc.prototype = {
 		return triggeredCalc;
 	},
 	
+	/**
+	 * Wrapper method to trigger processCalculation when there is a pause in users key events
+	 */
 	keyupEvent : function() {
 		this.lastKeyup = new Date().getTime();
 		var that = this;
@@ -227,7 +227,13 @@ slikcalc.BaseCalc.prototype = {
 		return total;
 	},
 	
+	/**
+	 * Wrapper method for concrete class' `calculate` method
+	 */
 	processCalculation: function() {
+		if(this.initialized === false) {
+			this.baseInitialize();
+		}
         this.calculate();
     	slikcalc.fireEvent(this.calculationComplete);
 	},
@@ -340,7 +346,6 @@ slikcalc.FormulaCalc = function(config) {
 };
 slikcalc.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
 
-slikcalc.FormulaCalc.prototype.initialized = false;
 slikcalc.FormulaCalc.prototype.formula = null;
 slikcalc.FormulaCalc.prototype.formulaParsed = null;
 slikcalc.FormulaCalc.prototype.resultVar = null;
@@ -353,7 +358,6 @@ slikcalc.FormulaCalc.prototype.variables = null;
  * Also processes the calculation if calcOnLoad is true.
  */
 slikcalc.FormulaCalc.prototype.initialize = function() {
-	this.initialized = true;
 	this.formulaParsed = this.formula;
 	if(this.formulaParsed.indexOf('=') !== -1) {
 		var formulaSplit = this.formulaParsed.split('=');
@@ -402,9 +406,6 @@ slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
  * @description Processes the rows and applies the formula to each one.
  */
 slikcalc.FormulaCalc.prototype.calculate = function() {
-	if(this.initialized === false) {
-		this.initialize();
-	}
 	var total = 0.00;
 	for(var idx in this.rows) {
         if(this.rows.hasOwnProperty(idx)) {
