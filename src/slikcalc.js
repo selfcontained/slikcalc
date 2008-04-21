@@ -13,11 +13,7 @@ slikcalc = {
 		var value = null;
 		var element = this.get(el);
 		if(element !== null) {
-			if(element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
-				value = element.value;
-			}else {
-				value = element.innerHTML;
-			}
+			value = this.isInput(element) ? element.value : element.innerHTML;
 		}
 		return value;
 	},
@@ -25,7 +21,7 @@ slikcalc = {
 	setValue : function(el, value) {
 		var element = this.get(el);
 		if(element !== null) {
-			if(element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
+			if(this.isInput(element)) {
 				element.value = value;
 			}else {
 				element.innerHTML = value;
@@ -35,11 +31,7 @@ slikcalc = {
 	
 	getAmount : function(el) {
 		var amount = this.getValue(el);
-		if(amount !== null) {
-			amount = parseFloat(this.formatCurrency(amount));
-		}else {
-			amount = parseFloat(this.formatCurrency(0));
-		}
+		amount = amount !== null ? parseFloat(this.formatCurrency(amount)) : parseFloat(this.formatCurrency(0));
 		return amount;
 	},
 	
@@ -47,20 +39,13 @@ slikcalc = {
 		this.setValue(el, this.formatCurrency(value));
 	},
 	
+	isInput : function(element) {
+		return element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT';
+	},
+	
 	formatCurrency : function(num) {
-		num = num === null ? 0.00 : num;
-	    num = num.toString().replace(/\$|\,/g,'');
-        if(isNaN(num)) {
-            num = "0";
-        }
-        var sign = (num == (num = Math.abs(num)));
-        num = Math.floor(num*100+0.50000000001);
-        var cents = num%100;
-        num = Math.floor(num/100).toString();
-        if(cents<10) {
-            cents = "0" + cents;
-        }
-        return ( ( (sign) ? '' : '-' ) + '' + num + '.' + cents);
+		num = isNaN(num) || num === '' ? 0.00 : num;
+		return parseFloat(num).toFixed(2);
     },
     
     trim : function(string) {
