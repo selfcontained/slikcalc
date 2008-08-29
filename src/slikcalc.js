@@ -44,7 +44,7 @@ slikcalc = {
 	},
 	
 	formatCurrency : function(num) {
-		num = isNaN(num) || num === '' ? 0.00 : num;
+		num = isNaN(num) || num === '' || num === null ? 0.00 : num;
 		return parseFloat(num).toFixed(2);
     },
     

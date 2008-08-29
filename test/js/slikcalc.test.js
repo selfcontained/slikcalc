@@ -2,12 +2,37 @@ slikcalc.tests = {
 	
 	initialize : function() {
 		var TestRunner = YAHOO.tool.TestRunner;
+		TestRunner.add(this.formatCurrencyTest());
 		TestRunner.add(this.columnCalcTest());
 		TestRunner.add(this.formulaCalcTest());
         TestRunner.add(this.formulaCalcRowsTest());
 		TestRunner.add(this.chainedCalcRowsTest());
 		var testLogger = new YAHOO.tool.TestLogger();
 		TestRunner.run();
+	},
+	
+	formatCurrencyTest : function() {
+		return new YAHOO.tool.TestCase({
+			Assert : YAHOO.util.Assert,
+			
+			name : "Format Currency",
+			
+			testFormatNull : function() {
+				this.Assert.areEqual(0.00, slikcalc.formatCurrency(null));
+			},
+			
+			testFormatFloat : function() {
+				this.Assert.areEqual(10.64, slikcalc.formatCurrency(10.64));
+			},
+			
+			testFormatString : function() {
+				this.Assert.areEqual(75.29, slikcalc.formatCurrency('75.29'));
+			},
+			
+			testFormatEmptyString : function() {
+				this.Assert.areEqual(0.00, slikcalc.formatCurrency(''));
+			}
+		});
 	},
 	
 	columnCalcTest : function() {
