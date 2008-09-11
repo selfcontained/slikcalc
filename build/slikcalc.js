@@ -3,8 +3,9 @@
  * http://slikcalc.selfcontained.us
  * Code licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
- * version 1.0
+ * version X.X
  */
+ 
 var slikcalc;
 if(!slikcalc) {
 	slikcalc = {};
@@ -13,18 +14,17 @@ if(!slikcalc) {
 }
 
 slikcalc = {
-
+	
 	adapter : null,
-
+	
 	getValue : function(el) {
-		var value = null;
-		var element = this.get(el);
+		var value = null, element = this.get(el);
 		if(element !== null) {
 			value = this.isInput(element) ? element.value : element.innerHTML;
 		}
 		return value;
 	},
-
+	
 	setValue : function(el, value) {
 		var element = this.get(el);
 		if(element !== null) {
@@ -35,17 +35,17 @@ slikcalc = {
 			}
 		}
 	},
-
+	
 	getAmount : function(el) {
 		var amount = this.getValue(el);
 		amount = amount !== null ? parseFloat(this.formatCurrency(amount)) : parseFloat(this.formatCurrency(0));
 		return amount;
 	},
-
+	
 	setAmount : function(el, value) {
 		this.setValue(el, this.formatCurrency(value));
 	},
-
+	
 	isInput : function(element) {
 		return element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT';
 	},
@@ -54,75 +54,66 @@ slikcalc = {
 		num = isNaN(num) || num === '' || num === null ? 0.00 : num;
 		return parseFloat(num).toFixed(2);
     },
-
+	
     trim : function(string) {
 		return string.replace(/^\s+|\s+$/g, '');
 	},
-
+	
 	get : function(id) {
-		if(this.adapter === null) {
-			throw new Error('slikcalc requires an external javascript library adapter');
-		}
+		this.validateAdapter();
 		return this.adapter.get(id);
 	},
-
+	
 	validateAdapter : function() {
 	    if(this.adapter === null) {
 			throw new Error('slikcalc requires an external javascript library adapter');
 		}
 	},
-
+	
 	addListener : function(elementId, type, method, scope) {
 		this.validateAdapter();
 		this.adapter.addListener(elementId, type, method, scope);
 	},
-
+	
 	addOnLoad : function(method, scope) {
 		this.validateAdapter();
 		this.adapter.addOnLoad(method, scope);
 	},
-
+	
 	createCustomEvent : function(eventType) {
 	    this.validateAdapter();
 		return this.adapter.createCustomEvent(eventType);
 	},
-
+	
 	bindEvent : function(event, method, scope) {
 	    this.validateAdapter();
 		this.adapter.bindEvent(event, method, scope);
 	},
-
+	
 	fireEvent : function(event) {
 	    this.validateAdapter();
 		this.adapter.fireEvent(event);
 	},
-
+	
 	extend : function(subc, superc) {
 		if (! superc || ! subc) {
 			throw new Error('slikcalc.extend failed, please check that all dependencies are included.');
 		}
-
+	
 		var F = function() {};
 		F.prototype = superc.prototype;
 		subc.prototype = new F();
 		subc.prototype.constructor = subc;
 		subc.prototype.parent = superc.prototype;
 		subc.prototype.parent.constructor = superc;
+	},
+	
+	create : function(type, config) {
+		var calcType = type === 'column' ? slikcalc.ColumnCalc : type === 'formula' ? slikcalc.FormulaCalc : null;
+		return calcType !== null ? new calcType(config) : null;
 	}
-
+	
 };
-
-/**
- * @namespace slikcalc
- * @class BaseCalc
- * @constructor
- * @description Base Calculator class handles common configuration options, provides utility methods, an interface for extending, 
- * and runs calculator's initialize method on page load if it exists.
- * @param {String}	config[total][id]				(Optional) Element ID to place end result of column calculation
- * @param {String}	config[total][operator]			(Optional) ( +, -, *, x, / ) Mathematical operator to apply against each row to produce end result.  Defaults to '+'
- * @param {boolean}	config[calcOnLoad]				(Optional) Defaults to false. If true, on page load the calculate method is fired.
- * @param {boolean}	config[registerListeners] 		(Optional) Defaults to false. If true, event listeners are attached to inputs that fire the calculate method
- */
 slikcalc.BaseCalc = function(config) {
     config.total = config.total || {};
 	this.totalId = config.total.id || null;
@@ -153,57 +144,40 @@ slikcalc.BaseCalc.prototype = {
 	
 	initialized : false,
 	
-	/**
-	 * Base initializing method
-	 */
 	baseInitialize : function() {
 		if(this.initialized === false) {
 			this.initialized = true;
 			if(this.initialize !== undefined && typeof this.initialize === 'function') {
 			    this.initialize();
 			}
+			if(this.calcOnLoad === true) {
+				this.processCalculation();
+			}
 		}
 	},
 	
-	/**
-	 * Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
-	 * this.calculate will be called after dependCalc.calculate
-	 */
 	dependsOn : function(dependCalc) {
 		slikcalc.bindEvent(dependCalc.calculationComplete, this.processCalculation, this);
 		return dependCalc;
 	},
 	
-	/**
-	 * Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
-	 * this.calculate will be called before triggeredCalc.calculate
-	 */
 	triggers : function(triggeredCalc) {
 		slikcalc.bindEvent(this.calculationComplete, triggeredCalc.processCalculation, triggeredCalc);
 		return triggeredCalc;
 	},
 	
-	/**
-	 * Wrapper method to trigger processCalculation when there is a pause in users key events
-	 */
 	keyupEvent : function() {
 		this.lastKeyup = new Date().getTime();
-		var that = this;
 		this.calculations = this.calculations + 1;
-		var calculation = this.calculations;
+		var that = this, calculation = this.calculations;
 		setTimeout(function() {
-			var currentTime = new Date().getTime();
-			var difference = currentTime - that.lastKeyup;
+			var currentTime = new Date().getTime(), difference = currentTime - that.lastKeyup;
 			if(calculation == that.calculations && difference > that.keyupDelay) {
 				that.processCalculation();
 			}
 		}, (this.keyupDelay+100));
 	},
 	
-	/**
-	 * Calculates the total amount, dependant upon the totalOperator value.  
-	 * Seperated into conditional statements for better performance than using 'eval(), and to handle operator unique functionality'
-	 */
 	calculateTotal : function(total, amount) {
 		if(this.totalOperator === '+') {
 			total = total === null ? 0.00 : total;
@@ -227,9 +201,6 @@ slikcalc.BaseCalc.prototype = {
 		return total;
 	},
 	
-	/**
-	 * Wrapper method for concrete class' `calculate` method
-	 */
 	processCalculation: function() {
 		if(this.initialized === false) {
 			this.baseInitialize();
@@ -238,21 +209,10 @@ slikcalc.BaseCalc.prototype = {
     	slikcalc.fireEvent(this.calculationComplete);
 	},
 	
-	/**
-	 * Abstract method to be implemented in sub-classes.
-	 */
 	calculate : function() {
 		throw new Error('Must implement calculate method in sub-class of BaseCalc');
 	}
 };
-
-/**
- * @namespace slikcalc
- * @class ColumnCalc
- * @description Calculator ojbect for performing column-based calculations
- * @constructor
- * @param {object} config				(Required) Configuration object
- */
 slikcalc.ColumnCalc = function(config) {
 	this.parent.constructor.call(this, config);
 	this.rows = [];
@@ -261,22 +221,12 @@ slikcalc.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc);
 
 slikcalc.ColumnCalc.prototype.rows = null;
 
-/**
- * @description Runs on page load.  Processes calculation if calcOnLoad is set to true, and sets up event listeners 
- * if registerEventListeners is set to true.
- */
 slikcalc.ColumnCalc.prototype.initialize = function() {
-    if(this.calcOnLoad === true) {
-        this.processCalculation();
-    }
     if(this.registerListeners === true) {
 		this.setupEventListeners();
 	}
 };
 
-/**
- * @description Processes the rows and applies the totalOperator upon each value, placing the total in the totalId element
- */
 slikcalc.ColumnCalc.prototype.calculate = function() {
 	var total = null;
 	for(var idx in this.rows) {
@@ -294,9 +244,6 @@ slikcalc.ColumnCalc.prototype.calculate = function() {
 	slikcalc.setAmount(this.totalId, total);
 };
 
-/**
- * @description Adds event listeners for row checkboxes and inputs
- */
 slikcalc.ColumnCalc.prototype.setupEventListeners = function() {
 	for(var idx in this.rows) {
 		if(this.rows.hasOwnProperty(idx)) {
@@ -309,12 +256,6 @@ slikcalc.ColumnCalc.prototype.setupEventListeners = function() {
 	}	
 };
 
-/**
- * @description Adds a row to the calculator to be included with calculations.
- * @param {String}	config[id]						(Required) Element id that holds the value to calculate
- * @param {String}	config[checkbox][id]			(Optional) Element id of checkbox.
- * @param {boolean}	config[checkbox][invert]		(Optional) Defaults to false. If true, row is included in total calculcation when un-checked, and omitted when checked.
- */
 slikcalc.ColumnCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};
 	if(rowConfig.checkbox !== undefined) {
@@ -322,18 +263,6 @@ slikcalc.ColumnCalc.prototype.addRow = function(rowConfig) {
 	}
 	this.rows.push(rowConfig);
 };
-
-/**
- * @namespace slikcalc
- * @class FormulaCalc
- * @description Calculator object that calculates based on a given formula and mapped variables.  Calculates across multiple rows as well,
- * updating a single totals value based on a given mathematical operator.
- * @constructor
- * @param {String}	config[formula]			(Required) Mathematical formula in string form.  Variables denoted within the '{}' that map to vars definitions
- * passed in on the addRow method.  Example: "{a} + {b} = {c}".  "{a} + {b}" is used as the formula, 
- * and {c} becomes the position that the eval'd result is placed into.
- * @param {object}	config[total][vars]		Variables configuration object, see FormulaCalc.addRow() for details
- */
 slikcalc.FormulaCalc = function(config) {
 	this.parent.constructor.call(this, config);
 	config = config || {};
@@ -347,16 +276,17 @@ slikcalc.FormulaCalc = function(config) {
 slikcalc.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
 
 slikcalc.FormulaCalc.prototype.formula = null;
+
 slikcalc.FormulaCalc.prototype.formulaParsed = null;
+
 slikcalc.FormulaCalc.prototype.resultVar = null;
+
 slikcalc.FormulaCalc.prototype.varMatch = /\{(\w)\}/gi;
+
 slikcalc.FormulaCalc.prototype.rows = null;
+
 slikcalc.FormulaCalc.prototype.variables = null;
 
-/**
- * @description Method run on page load to parse the formula, and pull out variables within it.  
- * Also processes the calculation if calcOnLoad is true.
- */
 slikcalc.FormulaCalc.prototype.initialize = function() {
 	this.formulaParsed = this.formula;
 	if(this.formulaParsed.indexOf('=') !== -1) {
@@ -369,20 +299,8 @@ slikcalc.FormulaCalc.prototype.initialize = function() {
 		this.variables.push(result[1]);
 	}
 	this.varMatch.lastIndex = 0;
-	if(this.calcOnLoad === true) {
-		this.processCalculation();
-	}
 };
 
-/**
- * @description Adds a row to the calculator to be included in the calculations
- * @param {object}	vars						(Required) Object containing one to many variable definitions
- * @param {object}	vars[x]						(Required) Configuration object for variable 'x' where x represents a variable in the formula
- * @param {String}	vars[x][id]					(Required) Element id for the input mappted to variable 'x' in formula
- * @param {decimal}	vars[x][defaultValue]		(Optional) Value used in place of empty/null for variable 'x'.  Defaults to 0
- * @param {String}	config[checkbox][id]		(Optional) Element id of checkbox. Required if config[checkbox] included
- * @param {boolean}	config[checkbox][invert]	(Optional) Defaults to false. If true, row is included in total calculcation when un-checked, and omitted when checked
- */
 slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};
 	if(rowConfig.checkbox !== undefined) {
@@ -402,21 +320,15 @@ slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 	this.rows.push(rowConfig);
 };
 
-/**
- * @description Processes the rows and applies the formula to each one.
- */
 slikcalc.FormulaCalc.prototype.calculate = function() {
 	var total = 0.00;
 	for(var idx in this.rows) {
         if(this.rows.hasOwnProperty(idx)) {
-            var includeRow = true;
+            var includeRow = true, rowTotal, formulaString = this.formulaParsed;
             if(this.rows[idx].checkbox !== undefined) {
                 var checkbox = this.rows[idx].checkbox;
 				includeRow = (checkbox.invert !== slikcalc.get(checkbox.id).checked);
             }
-            var rowTotal = 0;
-    
-            var formulaString = this.formulaParsed;
             for(var varIdx in this.variables) {
                 if(this.variables.hasOwnProperty(varIdx)) {
                     var variableName = this.variables[varIdx];

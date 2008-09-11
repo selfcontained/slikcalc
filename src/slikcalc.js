@@ -30,8 +30,7 @@ slikcalc = {
 	 * @returns {String} Elements value or innerHTML
 	 */
 	getValue : function(el) {
-		var value = null;
-		var element = this.get(el);
+		var value = null, element = this.get(el);
 		if(element !== null) {
 			value = this.isInput(element) ? element.value : element.innerHTML;
 		}

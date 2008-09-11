@@ -113,12 +113,10 @@ slikcalc.BaseCalc.prototype = {
 	 */
 	keyupEvent : function() {
 		this.lastKeyup = new Date().getTime();
-		var that = this;
 		this.calculations = this.calculations + 1;
-		var calculation = this.calculations;
+		var that = this, calculation = this.calculations;
 		setTimeout(function() {
-			var currentTime = new Date().getTime();
-			var difference = currentTime - that.lastKeyup;
+			var currentTime = new Date().getTime(), difference = currentTime - that.lastKeyup;
 			if(calculation == that.calculations && difference > that.keyupDelay) {
 				that.processCalculation();
 			}

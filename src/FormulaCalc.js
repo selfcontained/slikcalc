@@ -106,14 +106,11 @@ slikcalc.FormulaCalc.prototype.calculate = function() {
 	var total = 0.00;
 	for(var idx in this.rows) {
         if(this.rows.hasOwnProperty(idx)) {
-            var includeRow = true;
+            var includeRow = true, rowTotal, formulaString = this.formulaParsed;
             if(this.rows[idx].checkbox !== undefined) {
                 var checkbox = this.rows[idx].checkbox;
 				includeRow = (checkbox.invert !== slikcalc.get(checkbox.id).checked);
             }
-            var rowTotal = 0;
-    
-            var formulaString = this.formulaParsed;
             for(var varIdx in this.variables) {
                 if(this.variables.hasOwnProperty(varIdx)) {
                     var variableName = this.variables[varIdx];
