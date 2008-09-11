@@ -1,13 +1,15 @@
 /**
- * @namespace slikcalc
  * @class BaseCalc
  * @constructor
  * @description Base Calculator class handles common configuration options, provides utility methods, an interface for extending, 
  * and runs calculator's initialize method on page load if it exists.
- * @param {String}	config[total][id]				(Optional) Element ID to place end result of column calculation
- * @param {String}	config[total][operator]			(Optional) ( +, -, *, x, / ) Mathematical operator to apply against each row to produce end result.  Defaults to '+'
- * @param {boolean}	config[calcOnLoad]				(Optional) Defaults to false. If true, on page load the calculate method is fired.
- * @param {boolean}	config[registerListeners] 		(Optional) Defaults to false. If true, event listeners are attached to inputs that fire the calculate method
+ * @param {Object} config Configuration object with the following options:
+ * <ul>
+ * 	<li>total.id : (Optional) Element ID to place end result of column calculation</li>
+ *  <li>total.operator : (Optional) ( +, -, *, x, / ) Mathematical operator to apply against each row to produce end result.  Defaults to '+'</li>
+ *  <li>calcOnLoad : (Optional) Defaults to false. If true, on page load the calculate method is fired</li>
+ *  <li>registerListeners : (Optional) Defaults to false. If true, event listeners are attached to inputs that fire the calculate method</li>
+ * </ul>
  */
 slikcalc.BaseCalc = function(config) {
     config.total = config.total || {};
@@ -21,26 +23,58 @@ slikcalc.BaseCalc = function(config) {
 
 slikcalc.BaseCalc.prototype = {
 
+	/**
+	 * @description Reference to slikcalc custom event to fire when the calculation has been 
+	 * completed for this calculator
+	 */
 	calculationComplete : null,
 	
+	/**
+	 * @description Internal value of the time when the last keyup event fired used to make sure and
+	 * fire the calculate event only after there is a delay in typing for performance reasons
+	 */
 	lastKeyUp : null,
 	
+	/**
+	 * @description Internal value tracking the number of calculations triggered used to prevent callbacks from firing out of synch
+	 */
 	calculations : 0,
 	
+	/**
+	 * @description Element ID for the total value of the calculator
+	 */
 	totalId : null,
 	
+	/**
+	 * @description Mathematical operator to apply against each row to produce end result ( +, -, *, x, / )
+	 */
 	totalOperator : null,
 	
+	/**
+	 * @description Boolean value to signal if the calculator should fire initially when the page loads
+	 */
 	calcOnLoad : false,
 	
+	/**
+	 * @description Boolean value indicating if event listeners should be placed on relevant elements to tracking key events and clicking
+	 */
 	registerListeners : false,
 	
+	/**
+	 * @description Configuration value for the pause in keyup events to wait for before calculating.  
+	 * Setting this to zero will cause calculations to perform on each keyup event, which could become costly with many calculators
+	 * chained together
+	 */
 	keyupDelay: 600,
 	
+	/**
+	 * @description Internal boolean to track if the calculator has been initialized yet
+	 */
 	initialized : false,
 	
 	/**
-	 * Base initializing method
+	 * @description Base initialize method to handle calling subclass initialize(), and sets initialized property.
+	 * Also calls processCalculation() if calcOnLoad is true
 	 */
 	baseInitialize : function() {
 		if(this.initialized === false) {
@@ -48,12 +82,16 @@ slikcalc.BaseCalc.prototype = {
 			if(this.initialize !== undefined && typeof this.initialize === 'function') {
 			    this.initialize();
 			}
+			if(this.calcOnLoad === true) {
+				this.processCalculation();
+			}
 		}
 	},
 	
 	/**
-	 * Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
+	 * @description Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
 	 * this.calculate will be called after dependCalc.calculate
+	 * @param {BaseCalc} dependCalc BaseCalc object to attach event to
 	 */
 	dependsOn : function(dependCalc) {
 		slikcalc.bindEvent(dependCalc.calculationComplete, this.processCalculation, this);
@@ -61,8 +99,9 @@ slikcalc.BaseCalc.prototype = {
 	},
 	
 	/**
-	 * Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
+	 * @description Sets up event chaining for BaseCalc objects.  The object passed in is returned to allow for a fluent interface
 	 * this.calculate will be called before triggeredCalc.calculate
+	 * @param {BaseCalc} triggeredCalc BaseCalc object to attach event to
 	 */
 	triggers : function(triggeredCalc) {
 		slikcalc.bindEvent(this.calculationComplete, triggeredCalc.processCalculation, triggeredCalc);
@@ -70,7 +109,7 @@ slikcalc.BaseCalc.prototype = {
 	},
 	
 	/**
-	 * Wrapper method to trigger processCalculation when there is a pause in users key events
+	 * @description Wrapper method to trigger processCalculation when there is a pause in users key events
 	 */
 	keyupEvent : function() {
 		this.lastKeyup = new Date().getTime();
@@ -87,8 +126,10 @@ slikcalc.BaseCalc.prototype = {
 	},
 	
 	/**
-	 * Calculates the total amount, dependant upon the totalOperator value.  
-	 * Seperated into conditional statements for better performance than using 'eval(), and to handle operator unique functionality'
+	 * @description Calculates the total amount, dependant upon the totalOperator value.  
+	 * Seperated into conditional statements for better performance than using 'eval()', and to handle operator unique functionality
+	 * @param {Float} total Initial value of total.
+	 * @param {Float} amount New amount to calculate in conjunction with total.
 	 */
 	calculateTotal : function(total, amount) {
 		if(this.totalOperator === '+') {
@@ -114,7 +155,7 @@ slikcalc.BaseCalc.prototype = {
 	},
 	
 	/**
-	 * Wrapper method for concrete class' `calculate` method
+	 * @description Wrapper method for concrete class' `calculate` method
 	 */
 	processCalculation: function() {
 		if(this.initialized === false) {
@@ -125,7 +166,7 @@ slikcalc.BaseCalc.prototype = {
 	},
 	
 	/**
-	 * Abstract method to be implemented in sub-classes.
+	 * @description Abstract method to be implemented in sub-classes.
 	 */
 	calculate : function() {
 		throw new Error('Must implement calculate method in sub-class of BaseCalc');

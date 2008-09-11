@@ -1,13 +1,13 @@
 /**
- * @namespace slikcalc
  * @class FormulaCalc
  * @description Calculator object that calculates based on a given formula and mapped variables.  Calculates across multiple rows as well,
  * updating a single totals value based on a given mathematical operator.
  * @constructor
- * @param {String}	config[formula]			(Required) Mathematical formula in string form.  Variables denoted within the '{}' that map to vars definitions
- * passed in on the addRow method.  Example: "{a} + {b} = {c}".  "{a} + {b}" is used as the formula, 
- * and {c} becomes the position that the eval'd result is placed into.
- * @param {object}	config[total][vars]		Variables configuration object, see FormulaCalc.addRow() for details
+ * @param {Object} config Configuration object, all options of slikcalc.BaseCalc plus the following:
+ * <ul>
+ * 	<li>formula : Mathematical formula in string form.  Variables denoted within the '{}' that map to vars definitions passed in on the addRow method.  Example: "{a} + {b} = {c}".  "{a} + {b}" is used as the formula, and {c} becomes the position that the eval'd result is placed into.</li>
+ *  <li>total.vars : Variables configuration object, see slikcalc.FormulaCalc.addRow() for details.  If passed in here, an initial row is added</li>
+ * </ul>
  */
 slikcalc.FormulaCalc = function(config) {
 	this.parent.constructor.call(this, config);
@@ -21,16 +21,38 @@ slikcalc.FormulaCalc = function(config) {
 };
 slikcalc.extend(slikcalc.FormulaCalc, slikcalc.BaseCalc);
 
+/**
+ * @description Formula used to calculate the total for a row
+ */
 slikcalc.FormulaCalc.prototype.formula = null;
+
+/**
+ * @description Holds the formula value once it has been parsed, and the equality portion has been removed
+ */
 slikcalc.FormulaCalc.prototype.formulaParsed = null;
+
+/**
+ * @description Property to hold the variable from the formula that specifies where the result goes
+ */
 slikcalc.FormulaCalc.prototype.resultVar = null;
+
+/**
+ * @description Regular Expression to find variables in the formula
+ */
 slikcalc.FormulaCalc.prototype.varMatch = /\{(\w)\}/gi;
+
+/**
+ * @description {Array} Array of row objects for the calculator
+ */
 slikcalc.FormulaCalc.prototype.rows = null;
+
+/**
+ * @description {Array} Array of the variables parsed from the formula
+ */
 slikcalc.FormulaCalc.prototype.variables = null;
 
 /**
  * @description Method run on page load to parse the formula, and pull out variables within it.  
- * Also processes the calculation if calcOnLoad is true.
  */
 slikcalc.FormulaCalc.prototype.initialize = function() {
 	this.formulaParsed = this.formula;
@@ -44,19 +66,19 @@ slikcalc.FormulaCalc.prototype.initialize = function() {
 		this.variables.push(result[1]);
 	}
 	this.varMatch.lastIndex = 0;
-	if(this.calcOnLoad === true) {
-		this.processCalculation();
-	}
 };
 
 /**
  * @description Adds a row to the calculator to be included in the calculations
- * @param {object}	vars						(Required) Object containing one to many variable definitions
- * @param {object}	vars[x]						(Required) Configuration object for variable 'x' where x represents a variable in the formula
- * @param {String}	vars[x][id]					(Required) Element id for the input mappted to variable 'x' in formula
- * @param {decimal}	vars[x][defaultValue]		(Optional) Value used in place of empty/null for variable 'x'.  Defaults to 0
- * @param {String}	config[checkbox][id]		(Optional) Element id of checkbox. Required if config[checkbox] included
- * @param {boolean}	config[checkbox][invert]	(Optional) Defaults to false. If true, row is included in total calculcation when un-checked, and omitted when checked
+ * @param {Object} rowConfig Configuration object for the row being added to the calculator.  It may contain the following options:
+ * <ul>
+ *  <li>vars : Object containing one to many variable definitions</li>
+ *  <li>vars.x : Configuration object for variable 'x' where x represents a variable in the formula</li>
+ *  <li>vars.x.id : Element id for the input mappted to variable 'x' in formula</li>
+ *  <li>vars.x.defaultValue : (Optional) Value used in place of empty/null for variable 'x'.  Defaults to 0</li>
+ *  <li>checkbox.id : Element id of checkbox. Required if config[checkbox] included</li>
+ *  <li>checkbox.invert : Defaults to false. If true, row is included in total calculcation when un-checked, and omitted when checked</li>
+ * </ul>
  */
 slikcalc.FormulaCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};

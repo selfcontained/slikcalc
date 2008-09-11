@@ -1,9 +1,8 @@
 /**
- * @namespace slikcalc
  * @class ColumnCalc
  * @description Calculator ojbect for performing column-based calculations
  * @constructor
- * @param {object} config				(Required) Configuration object
+ * @param {Object} config (Required) Configuration object, see slikcalc.BaseCalc for options
  */
 slikcalc.ColumnCalc = function(config) {
 	this.parent.constructor.call(this, config);
@@ -11,16 +10,15 @@ slikcalc.ColumnCalc = function(config) {
 };
 slikcalc.extend(slikcalc.ColumnCalc, slikcalc.BaseCalc);
 
+/**
+ * @description {Array} Array of row objects to use in calculator
+ */
 slikcalc.ColumnCalc.prototype.rows = null;
 
 /**
- * @description Runs on page load.  Processes calculation if calcOnLoad is set to true, and sets up event listeners 
- * if registerEventListeners is set to true.
+ * @description Runs on page load.  Sets up event listeners if registerEventListeners is set to true.
  */
 slikcalc.ColumnCalc.prototype.initialize = function() {
-    if(this.calcOnLoad === true) {
-        this.processCalculation();
-    }
     if(this.registerListeners === true) {
 		this.setupEventListeners();
 	}
@@ -63,9 +61,12 @@ slikcalc.ColumnCalc.prototype.setupEventListeners = function() {
 
 /**
  * @description Adds a row to the calculator to be included with calculations.
- * @param {String}	config[id]						(Required) Element id that holds the value to calculate
- * @param {String}	config[checkbox][id]			(Optional) Element id of checkbox.
- * @param {boolean}	config[checkbox][invert]		(Optional) Defaults to false. If true, row is included in total calculcation when un-checked, and omitted when checked.
+ * @param {Object} config Configuration object for row definitions, with the following options:
+ * <ul>
+ * 	<li>id : Element id that holds the value to calculate</li>
+ *  <li>checkbox.id : (Optional) Element id of checkbox</li>
+ *  <li>checkbox.invert : Defaults to false. If true, row is included in total calculcation when un-checked, and omitted when checked</li>
+ * </ul>
  */
 slikcalc.ColumnCalc.prototype.addRow = function(rowConfig) {
 	rowConfig = rowConfig || {};

@@ -16,7 +16,7 @@ slikcalc.examples = {
 	},
 	
 	setupColumnCalc : function() {
-		this.columnCalc.calc = new slikcalc.ColumnCalc({
+		this.columnCalc.calc = slikcalc.create('column', {
 			total: { id: 'ex1-total' },
 			registerListeners: true,
 			calcOnLoad: true
@@ -40,7 +40,7 @@ slikcalc.examples = {
 	},
 	
 	setupColumnCalcSubtract : function() {
-		this.columnCalcSubtract.calc = new slikcalc.ColumnCalc({
+		this.columnCalcSubtract.calc = slikcalc.create('column', {
 			total: { 
 			    id: 'cc-sub-total',
 			    operator: '-' 
@@ -54,7 +54,7 @@ slikcalc.examples = {
 	},
 	
 	setupFormulaCalc : function() {
-		this.formulaCalc = new slikcalc.FormulaCalc({
+		this.formulaCalc = slikcalc.create('formula', {
 			formula: '( {a} + {b} ) * {c} = {d}',
 			calcOnLoad: true,
             registerListeners: true,
@@ -68,7 +68,7 @@ slikcalc.examples = {
 	},
 	
 	setupFormulaCalcRows : function() {
-		this.formulaCalcRows = new slikcalc.FormulaCalc({
+		this.formulaCalcRows = slikcalc.create('formula', {
 			formula: '( {a} + {b} ) * {c} = {d}',
 			calcOnLoad: true,
 			total: { id: 'formula-rows-total' },
@@ -100,20 +100,20 @@ slikcalc.examples = {
 	},
 	
 	setupChainedCalcs : function() {
-		this.chainedCalcs.columnCalc1 = new slikcalc.ColumnCalc({
+		this.chainedCalcs.columnCalc1 = slikcalc.create('column', {
 			total: { id: 'chained-1-total' },
 			registerListeners: true,
 			calcOnLoad: true
 		});
 		this.chainedCalcs.columnCalc1.addRow({ id: 'chained-1-1' });
 		this.chainedCalcs.columnCalc1.addRow({ id: 'chained-1-2' });
-		this.chainedCalcs.columnCalc2 = new slikcalc.ColumnCalc({
+		this.chainedCalcs.columnCalc2 = slikcalc.create('column', {
 			total: { id: 'chained-2-total' },
 			registerListeners: true
 		});
 		this.chainedCalcs.columnCalc2.addRow({ id: 'chained-2-1' });
 		this.chainedCalcs.columnCalc2.addRow({ id: 'chained-2-2' });
-		this.chainedCalcs.formulaCalc = new slikcalc.FormulaCalc({
+		this.chainedCalcs.formulaCalc = slikcalc.create('formula', {
 			formula: '{a} + {b} = {c}',
 			vars: {
 				a: { id: 'chained-1-total' },
