@@ -91,6 +91,14 @@ slikcalc = {
 	 * @return {Float} Float value of set to two decimal places.
 	 */
 	formatCurrency : function(num) {
+		if(num !== undefined && typeof num === "string") {
+			if(num.indexOf(',') !== -1) {
+				num = num.replace(",", '');
+			}
+			if(num.indexOf('$') !== -1) {
+				num = num.replace("$", '');
+			}
+		}
 		num = isNaN(num) || num === '' || num === null ? 0.00 : num;
 		return parseFloat(num).toFixed(2);
     },

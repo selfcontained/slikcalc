@@ -31,6 +31,14 @@ slikcalc.tests = {
 			
 			testFormatEmptyString : function() {
 				this.Assert.areEqual(0.00, slikcalc.formatCurrency(''));
+			},
+			
+			testFormatStringWithComma : function() {
+				this.Assert.areEqual(1456.43, slikcalc.formatCurrency('1,456.43'));
+			},
+			
+			testFormatStringWithDollarSign : function() {
+				this.Assert.areEqual(75.29, slikcalc.formatCurrency('$75.29'));
 			}
 		});
 	},
