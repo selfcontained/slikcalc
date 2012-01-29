@@ -5,7 +5,7 @@
  * http://www.opensource.org/licenses/mit-license.php
  * version X.X
  */
- 
+
 var slikcalc;
 if(!slikcalc) {
 	slikcalc = {};
@@ -14,9 +14,9 @@ if(!slikcalc) {
 }
 
 slikcalc = {
-	
+
 	adapter : null,
-	
+
 	getValue : function(el) {
 		var value = null, element = this.get(el);
 		if(element !== null) {
@@ -24,7 +24,7 @@ slikcalc = {
 		}
 		return value;
 	},
-	
+
 	setValue : function(el, value) {
 		var element = this.get(el);
 		if(element !== null) {
@@ -35,17 +35,17 @@ slikcalc = {
 			}
 		}
 	},
-	
+
 	getAmount : function(el) {
 		var amount = this.getValue(el);
 		amount = amount !== null ? parseFloat(this.formatCurrency(amount)) : parseFloat(this.formatCurrency(0));
 		return amount;
 	},
-	
+
 	setAmount : function(el, value) {
 		this.setValue(el, this.formatCurrency(value));
 	},
-	
+
 	isInput : function(element) {
 		return element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT';
 	},
@@ -57,52 +57,52 @@ slikcalc = {
 		num = isNaN(num) || num === '' || num === null ? 0.00 : num;
 		return parseFloat(num).toFixed(2);
     },
-	
+
     trim : function(string) {
 		return string.replace(/^\s+|\s+$/g, '');
 	},
-	
+
 	get : function(id) {
 		this.validateAdapter();
 		return this.adapter.get(id);
 	},
-	
+
 	validateAdapter : function() {
-	    if(this.adapter === null) {
+		if(this.adapter === null) {
 			throw new Error('slikcalc requires an external javascript library adapter');
 		}
 	},
-	
+
 	addListener : function(elementId, type, method, scope) {
 		this.validateAdapter();
 		this.adapter.addListener(elementId, type, method, scope);
 	},
-	
+
 	addOnLoad : function(method, scope) {
 		this.validateAdapter();
 		this.adapter.addOnLoad(method, scope);
 	},
-	
+
 	createCustomEvent : function(eventType) {
-	    this.validateAdapter();
+		this.validateAdapter();
 		return this.adapter.createCustomEvent(eventType);
 	},
-	
+
 	bindEvent : function(event, method, scope) {
-	    this.validateAdapter();
+		this.validateAdapter();
 		this.adapter.bindEvent(event, method, scope);
 	},
-	
+
 	fireEvent : function(event) {
-	    this.validateAdapter();
+		this.validateAdapter();
 		this.adapter.fireEvent(event);
 	},
-	
+
 	extend : function(subc, superc) {
 		if (! superc || ! subc) {
 			throw new Error('slikcalc.extend failed, please check that all dependencies are included.');
 		}
-	
+
 		var F = function() {};
 		F.prototype = superc.prototype;
 		subc.prototype = new F();
@@ -110,12 +110,12 @@ slikcalc = {
 		subc.prototype.parent = superc.prototype;
 		subc.prototype.parent.constructor = superc;
 	},
-	
+
 	create : function(type, config) {
 		var calcType = type === 'column' ? slikcalc.ColumnCalc : type === 'formula' ? slikcalc.FormulaCalc : null;
 		return calcType !== null ? new calcType(config) : null;
 	}
-	
+
 };
 slikcalc.BaseCalc = function(config) {
     config.total = config.total || {};
@@ -130,45 +130,45 @@ slikcalc.BaseCalc = function(config) {
 slikcalc.BaseCalc.prototype = {
 
 	calculationComplete : null,
-	
+
 	lastKeyUp : null,
-	
+
 	calculations : 0,
-	
+
 	totalId : null,
-	
+
 	totalOperator : null,
-	
+
 	calcOnLoad : false,
-	
+
 	registerListeners : false,
-	
+
 	keyupDelay: 600,
-	
+
 	initialized : false,
-	
+
 	baseInitialize : function() {
 		if(this.initialized === false) {
 			this.initialized = true;
 			if(this.initialize !== undefined && typeof this.initialize === 'function') {
-			    this.initialize();
+				this.initialize();
 			}
 			if(this.calcOnLoad === true) {
 				this.processCalculation();
 			}
 		}
 	},
-	
+
 	dependsOn : function(dependCalc) {
 		slikcalc.bindEvent(dependCalc.calculationComplete, this.processCalculation, this);
 		return dependCalc;
 	},
-	
+
 	triggers : function(triggeredCalc) {
 		slikcalc.bindEvent(this.calculationComplete, triggeredCalc.processCalculation, triggeredCalc);
 		return triggeredCalc;
 	},
-	
+
 	keyupEvent : function() {
 		this.lastKeyup = new Date().getTime();
 		this.calculations = this.calculations + 1;
@@ -180,7 +180,7 @@ slikcalc.BaseCalc.prototype = {
 			}
 		}, (this.keyupDelay+100));
 	},
-	
+
 	calculateTotal : function(total, amount) {
 		if(this.totalOperator === '+') {
 			total = total === null ? 0.00 : total;
@@ -203,15 +203,15 @@ slikcalc.BaseCalc.prototype = {
 		}
 		return total;
 	},
-	
+
 	processCalculation: function() {
 		if(this.initialized === false) {
 			this.baseInitialize();
 		}
         this.calculate();
-    	slikcalc.fireEvent(this.calculationComplete);
+		slikcalc.fireEvent(this.calculationComplete);
 	},
-	
+
 	calculate : function() {
 		throw new Error('Must implement calculate method in sub-class of BaseCalc');
 	}
@@ -256,7 +256,7 @@ slikcalc.ColumnCalc.prototype.setupEventListeners = function() {
 			}
 			slikcalc.addListener(rowConfig.id, 'keyup', this.keyupEvent, this);
 		}
-	}	
+	}
 };
 
 slikcalc.ColumnCalc.prototype.addRow = function(rowConfig) {
