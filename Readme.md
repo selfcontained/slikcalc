@@ -8,7 +8,9 @@ Slikcalc is a small javascript framework that makes it easy to add dynamic and s
 
 Setting up Slikcalc is super simple, just download the latest release, and then include slikcalc.min.js on your page.
 
-	<script src="/slikcalc.min.js" type="text/javascript"></script>
+```html
+<script src="/slikcalc.min.js" type="text/javascript"></script>
+```
 
 After that, you're ready to begin with either a ColumnCalc or FormulaCalc, or if you're feeling really smart, a Custom calculator.
 
@@ -20,28 +22,32 @@ Column calculators are for when you have a collection of values that you want to
 
 ###ColumnCalc Example
 
-	var columnCalc1 = slikcalc.create('column', {
-		total: { id: 'cc-1-total' },
-		registerListeners: true,
-		calcOnLoad: true
-	});
-	columnCalc1.addRow({ id: 'cc-1-1' });
-	columnCalc1.addRow({ id: 'cc-1-2' });
-	columnCalc1.addRow({
-		id: 'cc-1-3',
-		checkbox: { id: 'cc-1-3-c' }
-	});
+```javascript
+var columnCalc1 = slikcalc.create('column', {
+	total: { id: 'cc-1-total' },
+	registerListeners: true,
+	calcOnLoad: true
+});
+columnCalc1.addRow({ id: 'cc-1-1' });
+columnCalc1.addRow({ id: 'cc-1-2' });
+columnCalc1.addRow({
+	id: 'cc-1-3',
+	checkbox: { id: 'cc-1-3-c' }
+});
+```
 
 ###ColumnCalc Options
 
-	var columnCalc1 = slikcalc.create('column', {
-		total: {
-			id: 'totalElementId', //Optional.  Id of the element where the total calculation of a collection of rows will go.
-			operator: '+', //Optional, defaults to '+'. Valid values = ( +, -, *, x, / ).  Mathematical operator used to calculate the total of a collection of rows.
-		},
-		registerListeners: true/false, //Optional, defaults to false.  If true, keyup event listeners will be attached to inputs that will trigger the calculate method.
-		calcOnLoad: true/false //Optional, defaults to false. Causes calculator to perform its calculate function on the page load event
-	});
+```javascript
+var columnCalc1 = slikcalc.create('column', {
+	total: {
+		id: 'totalElementId', //Optional.  Id of the element where the total calculation of a collection of rows will go.
+		operator: '+', //Optional, defaults to '+'. Valid values = ( +, -, *, x, / ).  Mathematical operator used to calculate the total of a collection of rows.
+	},
+	registerListeners: true/false, //Optional, defaults to false.  If true, keyup event listeners will be attached to inputs that will trigger the calculate method.
+	calcOnLoad: true/false //Optional, defaults to false. Causes calculator to perform its calculate function on the page load event
+});
+```
 
 ---
 
@@ -55,37 +61,41 @@ Formula calcs can be configured as one set of inputs mapped to the formula, or a
 
 ###FormulaCalc Example
 
-	var formulaCalc1 = slikcalc.create('formula', {
-		formula: '( {a} / {b} ) + {c} = {d}',
-		registerListeners: true,
-		calcOnLoad: true,
-		vars: {
-			a: { id: 'formula-1-1' },
-			b: { id: 'formula-1-2', defaultValue: 1 },
-			c: { id: 'formula-1-3' },
-			d: { id: 'formula-1-total' }
-		}
-	});
+```javascript
+var formulaCalc1 = slikcalc.create('formula', {
+	formula: '( {a} / {b} ) + {c} = {d}',
+	registerListeners: true,
+	calcOnLoad: true,
+	vars: {
+		a: { id: 'formula-1-1' },
+		b: { id: 'formula-1-2', defaultValue: 1 },
+		c: { id: 'formula-1-3' },
+		d: { id: 'formula-1-total' }
+	}
+});
+```
 
 ###FormulaCalc Options
 
-	var formulaCalc = slikcalc.create('formula', {
-		formula: '{a} + {b} = {c}', //Required formula string
-		calcOnLoad: true/false, //Optional, defaults to false. Causes calculator to perform its calculate function on the page load event
-		total: {
-			id: 'totalElementId', //Optional.  Id of the element where the total calculation of a collection of rows will go.
-			operator: '+', //Optional, defaults to '+'. Valid values = ( +, -, *, x, / ).  Mathematical operator used to calculate the total of a collection of rows.
-		},
-		registerListeners: true/false, //Optional, defaults to false.  If true, keyup event listeners will be attached to inputs that will trigger the calculate method.
-		vars: {
-			a: {
-				id: 'first-value', //This would map the input 'header-2-1' to the variable {a} in the formula string
-				defaultValue: 0 //Optional, default is 0. This value is used if there is no value in the mapped input
-			 },
-			b: { id: 'second-value' }, //This would map the input 'header-2-2' to the variable {b} in the formula string
-			c: { id: 'row-total'} //This would map the input 'header-2-3' to the variable {c} in the formula string
-		}  //Optional.  If a 'vars' configuration is passed in the constructor, it is treated as if you called addRow and passed it in.  This is for convenience when you have only one set of inputs for you calculation.
-	});
+```javascript
+var formulaCalc = slikcalc.create('formula', {
+	formula: '{a} + {b} = {c}', //Required formula string
+	calcOnLoad: true/false, //Optional, defaults to false. Causes calculator to perform its calculate function on the page load event
+	total: {
+		id: 'totalElementId', //Optional.  Id of the element where the total calculation of a collection of rows will go.
+		operator: '+', //Optional, defaults to '+'. Valid values = ( +, -, *, x, / ).  Mathematical operator used to calculate the total of a collection of rows.
+	},
+	registerListeners: true/false, //Optional, defaults to false.  If true, keyup event listeners will be attached to inputs that will trigger the calculate method.
+	vars: {
+		a: {
+			id: 'first-value', //This would map the input 'header-2-1' to the variable {a} in the formula string
+			defaultValue: 0 //Optional, default is 0. This value is used if there is no value in the mapped input
+		 },
+		b: { id: 'second-value' }, //This would map the input 'header-2-2' to the variable {b} in the formula string
+		c: { id: 'row-total'} //This would map the input 'header-2-3' to the variable {c} in the formula string
+	}  //Optional.  If a 'vars' configuration is passed in the constructor, it is treated as if you called addRow and passed it in.  This is for convenience when you have only one set of inputs for you calculation.
+});
+```
 
 ---
 
@@ -93,19 +103,22 @@ Formula calcs can be configured as one set of inputs mapped to the formula, or a
 
 Sometimes you may have a collection of calculators that must fire in a particular order for everything to calculate correctly. Slikcalc takes this into consideration and provides a very simple interface for controlling this. This is handled with two methods, ```triggers()``` and ```dependsOn()```. If we have a "calculateOne" calc object that should trigger the calculation of "calculatorTwo" object, we can set this up as follows:
 
-	calculatorOne.triggers(calculatorTwo);
+```javascript
+calculatorOne.triggers(calculatorTwo);
+```
 
 This same behavior can be created by describing it in reverse using the dependsOn() method
 
-
-	calculatorTwo.dependsOn(calculatorOne);
+```javascript
+calculatorTwo.dependsOn(calculatorOne);
+```
 
 
 This allows you to write your calculator objects in small, contained objects, and then chain them together as needed due to a fluent interface.  For example, if we have three calculator objects, calc1, calc2, an calc3, and they need to fire eachother in that order, we can accomplish this as follows:
 
-
-	calc1.triggers(calc2).triggers(calc3);
-
+```javascript
+calc1.triggers(calc2).triggers(calc3);
+```
 
 ###Custom Calculations
 
