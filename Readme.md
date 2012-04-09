@@ -111,10 +111,12 @@ This allows you to write your calculator objects in small, contained objects, an
 
 Custom calculators are exactly what they sound like, completely custom, and they can do anything you want them to. All that is required is that you create your own class, extend slikcalc.BaseCalc using slikcalc.extend(), and then implement a calculate method in your class. The rest is up to you! I'll post some examples of custom calculators soon.
 
-	slikcalc.MyCustomCalc = function (config) {
-		this.parent.constructor.call(this, config);
-	};
-	slikcalc.extend(slikcalc.MyCustomCalc, slikcalc.BaseCalc);
-	slikcalc.MyCustomCalc.prototype.calculate = function() {
-		//your code here
-	};
+```javascript
+slikcalc.MyCustomCalc = function (config) {
+	this.parent.constructor.call(this, config);
+};
+slikcalc.extend(slikcalc.MyCustomCalc, slikcalc.BaseCalc);
+slikcalc.MyCustomCalc.prototype.calculate = function() {
+	//your code here
+};
+```
