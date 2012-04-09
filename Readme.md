@@ -6,7 +6,7 @@ Slikcalc is a small javascript framework that makes it easy to add dynamic and s
 
 ##Setup
 
-Setting up Slikcalc is super simple, just download the latest release, and then include slikcalc.min.js on your page.
+Setting up Slikcalc is super simple, just [download the latest release](https://github.com/bmharris/slikcalc/tags), and then include slikcalc.min.js on your page.
 
 ```html
 <script src="/slikcalc.min.js" type="text/javascript"></script>
