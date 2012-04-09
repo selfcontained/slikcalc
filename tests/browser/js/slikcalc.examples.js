@@ -1,12 +1,12 @@
 slikcalc.examples = {
-	
+
 	columnCalc : {},
 	columnCalcSubtract : {},
 	formulaCalc : {},
 	formulaCalcRows : {},
-	
+
 	chainedCalcs : {},
-	
+
 	initialize : function() {
 		this.setupColumnCalc();
 		this.setupColumnCalcSubtract();
@@ -14,36 +14,36 @@ slikcalc.examples = {
 		this.setupFormulaCalcRows();
 		this.setupChainedCalcs();
 	},
-	
+
 	setupColumnCalc : function() {
 		this.columnCalc.calc = slikcalc.create('column', {
 			total: { id: 'ex1-total' },
 			registerListeners: true,
 			calcOnLoad: true
 		});
-		this.columnCalc.calc.addRow({ 
+		this.columnCalc.calc.addRow({
 			id: 'ex-1-1',
 			checkbox: {
 				id: 'ex-1-1-c'
 			}
 		});
-		this.columnCalc.calc.addRow({ 
+		this.columnCalc.calc.addRow({
 			id: 'ex-1-2',
 			checkbox: {
 				id: 'ex-1-2-c',
 				invert: true
 			}
 		});
-		this.columnCalc.calc.addRow({ 
+		this.columnCalc.calc.addRow({
 			id: 'ex-1-3'
 		});
 	},
-	
+
 	setupColumnCalcSubtract : function() {
 		this.columnCalcSubtract.calc = slikcalc.create('column', {
-			total: { 
+			total: {
 			    id: 'cc-sub-total',
-			    operator: '-' 
+			    operator: '-'
 			},
 			registerListeners: true,
 			calcOnLoad: true
@@ -52,7 +52,7 @@ slikcalc.examples = {
 		this.columnCalcSubtract.calc.addRow({ id: 'cc-sub-2' });
 		this.columnCalcSubtract.calc.addRow({ id: 'cc-sub-3' });
 	},
-	
+
 	setupFormulaCalc : function() {
 		this.formulaCalc = slikcalc.create('formula', {
 			formula: '( {a} + {b} ) * {c} = {d}',
@@ -66,7 +66,7 @@ slikcalc.examples = {
 			}
 		});
 	},
-	
+
 	setupFormulaCalcRows : function() {
 		this.formulaCalcRows = slikcalc.create('formula', {
 			formula: '( {a} + {b} ) * {c} = {d}',
@@ -98,7 +98,7 @@ slikcalc.examples = {
             registerListeners: false
 		});
 	},
-	
+
 	setupChainedCalcs : function() {
 		this.chainedCalcs.columnCalc1 = slikcalc.create('column', {
 			total: { id: 'chained-1-total' },
