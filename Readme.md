@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/bmharris/slikcalc.png?branch=master)](http://travis-ci.org/bmharris/slikcalc)
+
 slikcalc
 ===
 
