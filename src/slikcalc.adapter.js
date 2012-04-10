@@ -34,7 +34,11 @@ var slikcalc;
 		},
 
 		addOnLoad : function (cb, scope) {
-			addListener(window, 'load', cb, scope);
+			if (domReady) {
+				cb.call(scope);
+			} else {
+				addListener(window, 'load', cb, scope);
+			}
 		},
 
 		createCustomEvent : function (eventType) {

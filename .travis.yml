@@ -1,0 +1,9 @@
+language: javascript
+node_js:
+    - 0.6
+    - 0.7 # development version of 0.8, may be unstable
+branches:
+    only:
+        - master
+before_script:
+    - "node build/build.js"

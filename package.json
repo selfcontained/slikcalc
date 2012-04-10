@@ -1,0 +1,30 @@
+{
+	"name": "slikcalc",
+	"version": "2.0.0",
+	"author": "Brad Harris <bmharris@gmail.com>",
+	"description": "javascript calculator library for the browser",
+	"contributors": [
+		{
+			"name": "Brad Harris",
+			"email": "bmharris@gmail.com"
+		}
+	],
+	"scripts": {
+		"test": "phantomjs tests/index.js tests/browser/index.html"
+	},
+	"main": "./src/slikcalc.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/bmharris/slikcalc.git"
+	},
+	"keywords": [
+		"calculator"
+	],
+	"dependencies" : {
+		"buildy"   :  "0.0.6"
+	},
+	"license": "MIT",
+	"engine": {
+		"node": ">=0.4"
+	}
+}

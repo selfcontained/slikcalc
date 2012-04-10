@@ -1,14 +1,14 @@
 var buildy = require('buildy'),
 	VERSION = '2.0.0',
-	OUTPUT_RAW = __dirname+'/build/slikcalc.js',
-	OUTPUT_MIN = __dirname+'/build/slikcalc.min.js',
+	OUTPUT_RAW = __dirname+'/slikcalc.js',
+	OUTPUT_MIN = __dirname+'/slikcalc.min.js',
 	jslint = {
 		browser: true,
 		nomen: true,
 		evil: true //FormulaCalc has to use eval
 	},
 	buildTemplate = {
-		template_file : './src/build.hb',
+		template_file : __dirname+'/build.hb',
 		template_vars : {
 			year : (new Date()).getFullYear(),
 			version : VERSION
@@ -17,11 +17,11 @@ var buildy = require('buildy'),
 
 new buildy.Queue('compile js')
 	.task('files', [
-		'./src/slikcalc.js',
-		'./src/slikcalc.adapter.js',
-		'./src/BaseCalc.js',
-		'./src/ColumnCalc.js',
-		'./src/FormulaCalc.js'])
+		__dirname+'/../src/slikcalc.js',
+		__dirname+'/../src/slikcalc.adapter.js',
+		__dirname+'/../src/BaseCalc.js',
+		__dirname+'/../src/ColumnCalc.js',
+		__dirname+'/../src/FormulaCalc.js'])
 	.task('concat')
 	.task('jslint', jslint)
 	.task('fork', {
