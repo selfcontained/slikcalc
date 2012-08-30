@@ -3,7 +3,7 @@
  * https://github.com/bmharris/slikcalc
  * Code licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
- * version 2.0.0
+ * version 2.0.1
  */
 /**
  * @namespace slikcalc
@@ -19,6 +19,11 @@ if (!slikcalc) {
 	"use strict";
 
 	slikcalc = {
+
+		/**
+		 * @precision Precision of floats when formatting currency
+		 */
+		precision : 2,
 
 		/**
 		 * @description Reference to 3rd party library slikcalc adapter
@@ -97,7 +102,7 @@ if (!slikcalc) {
 				num = num.replace(/[$,]/, '');
 			}
 			num = isNaN(num) || num === '' || num === null ? 0.00 : num;
-			return parseFloat(num).toFixed(2);
+			return parseFloat(num).toFixed(slikcalc.precision);
 	    },
 
 		/**

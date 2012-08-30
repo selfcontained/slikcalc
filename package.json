@@ -1,6 +1,6 @@
 {
 	"name": "slikcalc",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"author": "Brad Harris <bmharris@gmail.com>",
 	"description": "javascript calculator library for the browser",
 	"contributors": [
@@ -21,7 +21,7 @@
 		"calculator"
 	],
 	"dependencies" : {
-		"buildy"   :  "0.0.6"
+		"buildy"   :  "0.0.x"
 	},
 	"license": "MIT",
 	"engine": {
