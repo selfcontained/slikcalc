@@ -255,21 +255,23 @@ footer {
 }
 
 #calculators-container {
+  color: #D14;
   position: relative;
   padding-top: 20px;
 }
-#calculators {
-  
-}
 #calculators-total {
   position: absolute;
-  right: -20px;
-  top: 50px;
+  left: 200px;
+  top: 95px;
 }
 #calculators .textbox { 
-  border: solid 2px #454545; 
-  background: #fff url(../images/textbox-bg.gif) bottom left repeat-x; 
+  border: solid 2px #E5E5E5;
+  background: #F8F8F8;
   padding: 1px 2px 1px 2px; 
   width: 40px;
   text-align: right; 
+}
+#calculators-container .total {
+  color: #494949;
+  font-weight: bold;
 }
