@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Slikcalc by bmharris</title>
-    
+
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -17,11 +17,14 @@
       <header>
         <h1>Slikcalc</h1>
         <p>javascript calculator library</p>
+
         <p class="view"><a href="https://github.com/bmharris/slikcalc">View the Project on GitHub <small>bmharris/slikcalc</small></a></p>
+
+
         <ul>
           <li><a href="https://github.com/bmharris/slikcalc/zipball/master">Download <strong>ZIP File</strong></a></li>
           <li><a href="https://github.com/bmharris/slikcalc/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/bmharris/slikcalc">Fork On <strong>GitHub</strong></a></li>
+          <li><a href="https://github.com/bmharris/slikcalc">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
       <section>
@@ -33,11 +36,8 @@
 
 <p>Setting up Slikcalc is super simple, just <a href="https://github.com/bmharris/slikcalc/tags">download the latest release</a>, and then include slikcalc.min.js on your page.</p>
 
-<div class="highlight">
-<pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/slikcalc.min.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
-</pre>
-</div>
-
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/slikcalc.min.js"</span> <span class="na">type=</span><span class="s">"text/javascript"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
 
 <p>After that, you're ready to begin with either a ColumnCalc or FormulaCalc, or if you're feeling really smart, a Custom calculator.</p>
 
@@ -45,10 +45,12 @@
 
 <p>Column calculators are for when you have a collection of values that you want to apply a mathematical computation to, such as summing them, or multiplying them together. Usage includes creating a new ColumnCalc object, which can take configuration options, and then call the addRow() method for each value you want to add, which can also take configuration options. The total of the calculation is inserted into the field identified by one of the options passed into the constructors configuration.</p>
 
-<h3>ColumnCalc Example</h3>
+<h3>Addition ColumnCalc Example</h3>
 
-<div class="highlight">
-<pre><span class="kd">var</span> <span class="nx">columnCalc1</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'column'</span><span class="p">,</span> <span class="p">{</span>
+<p>This calculator adds up each row in the column. The second row shows that you can include non-editable 
+fields that contain plain text. The third row uses a checkbox that controls if the row is included in the total calculation.</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">columnCalc1</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'column'</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">total</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'cc-1-total'</span> <span class="p">},</span>
     <span class="nx">registerListeners</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="nx">calcOnLoad</span><span class="o">:</span> <span class="kc">true</span>
@@ -59,14 +61,32 @@
     <span class="nx">id</span><span class="o">:</span> <span class="s1">'cc-1-3'</span><span class="p">,</span>
     <span class="nx">checkbox</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'cc-1-3-c'</span> <span class="p">}</span>
 <span class="p">});</span>
-</pre>
-</div>
+</pre></div>
 
+<h3>Multiplication ColumnCalc Example</h3>
+
+<p>This calculator multiplies the rows together. The third row uses a checkbox that has the invert flag set to true, which means that if it is checked, the row is NOT included, and if it is not checked, it IS included in the calculation.</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">columnCalc2</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'column'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">total</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'cc-2-total'</span> <span class="p">},</span>
+    <span class="nx">registerListeners</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">calcOnLoad</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">totalOperator</span><span class="o">:</span> <span class="s1">'*'</span>
+<span class="p">});</span>
+<span class="nx">columnCalc2</span><span class="p">.</span><span class="nx">addRow</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'cc-2-1'</span> <span class="p">});</span>
+<span class="nx">columnCalc2</span><span class="p">.</span><span class="nx">addRow</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'cc-2-2'</span> <span class="p">});</span>
+<span class="nx">columnCalc2</span><span class="p">.</span><span class="nx">addRow</span><span class="p">({</span>
+    <span class="nx">id</span><span class="o">:</span> <span class="s1">'cc-2-3'</span><span class="p">,</span>
+    <span class="nx">checkbox</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">id</span><span class="o">:</span> <span class="s1">'cc-2-3-c'</span><span class="p">,</span>
+        <span class="nx">invert</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
 
 <h3>ColumnCalc Options</h3>
 
-<div class="highlight">
-<pre><span class="kd">var</span> <span class="nx">columnCalc1</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'column'</span><span class="p">,</span> <span class="p">{</span>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">columnCalc1</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'column'</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">total</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">id</span><span class="o">:</span> <span class="s1">'totalElementId'</span><span class="p">,</span> <span class="c1">//Optional.  Id of the element where the total calculation of a collection of rows will go.</span>
         <span class="nx">operator</span><span class="o">:</span> <span class="s1">'+'</span><span class="p">,</span> <span class="c1">//Optional, defaults to '+'. Valid values = ( +, -, *, x, / ).  Mathematical operator used to calculate the total of a collection of rows.</span>
@@ -74,9 +94,7 @@
     <span class="nx">registerListeners</span><span class="o">:</span> <span class="kc">true</span><span class="o">/</span><span class="kc">false</span><span class="p">,</span> <span class="c1">//Optional, defaults to false.  If true, keyup event listeners will be attached to inputs that will trigger the calculate method.</span>
     <span class="nx">calcOnLoad</span><span class="o">:</span> <span class="kc">true</span><span class="o">/</span><span class="kc">false</span> <span class="c1">//Optional, defaults to false. Causes calculator to perform its calculate function on the page load event</span>
 <span class="p">});</span>
-</pre>
-</div>
-
+</pre></div>
 
 <hr><h3>Formula Calculations</h3>
 
@@ -86,10 +104,11 @@ For example, at the top of this page are two formula calcs, where one is a formu
 
 <p>Formula calcs can be configured as one set of inputs mapped to the formula, or as a collection of inputs each mapped to the same formula. This is useful if you have a table with multiple rows that each need to calculate the same formula. In this case you can simply pass the configuration for each row, and optionally, an input to store the total of each row of formulas into. This total can be a sum of the formula calculations, or any of the other supported operators <code>+ - x * /</code>. Note that <strong>x</strong> and <strong>*</strong> both multiply the values, but are both included for convenience.</p>
 
-<h3>FormulaCalc Example</h3>
+<h3>Simple FormulaCalc Example</h3>
 
-<div class="highlight">
-<pre><span class="kd">var</span> <span class="nx">formulaCalc1</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'formula'</span><span class="p">,</span> <span class="p">{</span>
+<p>This is a basic Formula calculator that calculates a / b + c and updates the value into a field. Since there is only one set of fields for calculation, that vars object is passed in the constructor.</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">formulaCalc1</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'formula'</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">formula</span><span class="o">:</span> <span class="s1">'( {a} / {b} ) + {c} = {d}'</span><span class="p">,</span>
     <span class="nx">registerListeners</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="nx">calcOnLoad</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
@@ -100,14 +119,38 @@ For example, at the top of this page are two formula calcs, where one is a formu
         <span class="nx">d</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'formula-1-total'</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">});</span>
-</pre>
-</div>
+</pre></div>
 
+<h3>Multi-row FormulaCalc Example</h3>
+
+<p>This Formula calculator demonstrates using the ability to combine multiple rows of the same formula into one calculator, and have the total of each row summed up into another total. It also shows how you can add a checkbox to control if that row is included in the total.</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">formulaCalc2</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'formula'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">formula</span><span class="o">:</span> <span class="s1">'{a} * {b} = {c}'</span><span class="p">,</span>
+    <span class="nx">registerListeners</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">calcOnLoad</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">total</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'formula-2-total'</span> <span class="p">}</span>
+<span class="p">});</span>
+<span class="nx">formulaCalc2</span><span class="p">.</span><span class="nx">addRow</span><span class="p">({</span>
+    <span class="nx">vars</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">a</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'formula-2-1a'</span><span class="p">},</span>
+        <span class="nx">b</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'formula-2-1b'</span><span class="p">},</span>
+        <span class="nx">c</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'formula-2-1c'</span><span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+<span class="nx">formulaCalc2</span><span class="p">.</span><span class="nx">addRow</span><span class="p">({</span>
+    <span class="nx">vars</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">a</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'formula-2-2a'</span><span class="p">},</span>
+        <span class="nx">b</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'formula-2-2b'</span><span class="p">},</span>
+        <span class="nx">c</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'formula-2-2c'</span><span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nx">checkbox</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'formula-2-2-c'</span> <span class="p">}</span>
+<span class="p">});</span>
+</pre></div>
 
 <h3>FormulaCalc Options</h3>
 
-<div class="highlight">
-<pre><span class="kd">var</span> <span class="nx">formulaCalc</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'formula'</span><span class="p">,</span> <span class="p">{</span>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">formulaCalc</span> <span class="o">=</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="s1">'formula'</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">formula</span><span class="o">:</span> <span class="s1">'{a} + {b} = {c}'</span><span class="p">,</span> <span class="c1">//Required formula string</span>
     <span class="nx">calcOnLoad</span><span class="o">:</span> <span class="kc">true</span><span class="o">/</span><span class="kc">false</span><span class="p">,</span> <span class="c1">//Optional, defaults to false. Causes calculator to perform its calculate function on the page load event</span>
     <span class="nx">total</span><span class="o">:</span> <span class="p">{</span>
@@ -124,51 +167,44 @@ For example, at the top of this page are two formula calcs, where one is a formu
         <span class="nx">c</span><span class="o">:</span> <span class="p">{</span> <span class="nx">id</span><span class="o">:</span> <span class="s1">'row-total'</span><span class="p">}</span> <span class="c1">//This would map the input 'header-2-3' to the variable {c} in the formula string</span>
     <span class="p">}</span>  <span class="c1">//Optional.  If a 'vars' configuration is passed in the constructor, it is treated as if you called addRow and passed it in.  This is for convenience when you have only one set of inputs for you calculation.</span>
 <span class="p">});</span>
-</pre>
-</div>
-
+</pre></div>
 
 <hr><h3>Chaining Calculators</h3>
 
 <p>Sometimes you may have a collection of calculators that must fire in a particular order for everything to calculate correctly. Slikcalc takes this into consideration and provides a very simple interface for controlling this. This is handled with two methods, <code>triggers()</code> and <code>dependsOn()</code>. If we have a "calculateOne" calc object that should trigger the calculation of "calculatorTwo" object, we can set this up as follows:</p>
 
-<div class="highlight">
-<pre><span class="nx">calculatorOne</span><span class="p">.</span><span class="nx">triggers</span><span class="p">(</span><span class="nx">calculatorTwo</span><span class="p">);</span>
-</pre>
-</div>
-
+<div class="highlight"><pre><span class="nx">calculatorOne</span><span class="p">.</span><span class="nx">triggers</span><span class="p">(</span><span class="nx">calculatorTwo</span><span class="p">);</span>
+</pre></div>
 
 <p>This same behavior can be created by describing it in reverse using the dependsOn() method</p>
 
-<div class="highlight">
-<pre><span class="nx">calculatorTwo</span><span class="p">.</span><span class="nx">dependsOn</span><span class="p">(</span><span class="nx">calculatorOne</span><span class="p">);</span>
-</pre>
-</div>
-
+<div class="highlight"><pre><span class="nx">calculatorTwo</span><span class="p">.</span><span class="nx">dependsOn</span><span class="p">(</span><span class="nx">calculatorOne</span><span class="p">);</span>
+</pre></div>
 
 <p>This allows you to write your calculator objects in small, contained objects, and then chain them together as needed due to a fluent interface.  For example, if we have three calculator objects, calc1, calc2, an calc3, and they need to fire eachother in that order, we can accomplish this as follows:</p>
 
-<div class="highlight">
-<pre><span class="nx">calc1</span><span class="p">.</span><span class="nx">triggers</span><span class="p">(</span><span class="nx">calc2</span><span class="p">).</span><span class="nx">triggers</span><span class="p">(</span><span class="nx">calc3</span><span class="p">);</span>
-</pre>
-</div>
-
+<div class="highlight"><pre><span class="nx">calc1</span><span class="p">.</span><span class="nx">triggers</span><span class="p">(</span><span class="nx">calc2</span><span class="p">).</span><span class="nx">triggers</span><span class="p">(</span><span class="nx">calc3</span><span class="p">);</span>
+</pre></div>
 
 <h3>Custom Calculations</h3>
 
 <p>Custom calculators are exactly what they sound like, completely custom, and they can do anything you want them to. All that is required is that you create your own class, extend slikcalc.BaseCalc using slikcalc.extend(), and then implement a calculate method in your class. The rest is up to you! I'll post some examples of custom calculators soon.</p>
 
-<div class="highlight">
-<pre><span class="nx">slikcalc</span><span class="p">.</span><span class="nx">MyCustomCalc</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span class="nx">slikcalc</span><span class="p">.</span><span class="nx">MyCustomCalc</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">parent</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
 <span class="p">};</span>
 <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">slikcalc</span><span class="p">.</span><span class="nx">MyCustomCalc</span><span class="p">,</span> <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">BaseCalc</span><span class="p">);</span>
 <span class="nx">slikcalc</span><span class="p">.</span><span class="nx">MyCustomCalc</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">calculate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="c1">//your code here</span>
 <span class="p">};</span>
-</pre>
-</div>
+</pre></div>
 
+<hr><h3>Decimal Precision</h3>
+
+<p>The default precision for slikcalc is 2.  Currently you can adjust the decimal precision for slikcalc at a global level.  Just set it somewhere before your calculations run.</p>
+
+<div class="highlight"><pre><span class="nx">slikcalc</span><span class="p">.</span><span class="nx">precision</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</pre></div>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/bmharris">bmharris</a></p>
@@ -176,5 +212,16 @@ For example, at the top of this page are two formula calcs, where one is a formu
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-254292-13");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
