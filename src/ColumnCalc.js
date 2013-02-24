@@ -63,7 +63,8 @@ var slikcalc;
 				if (rowConfig.checkbox !== undefined) {
 					slikcalc.addListener(rowConfig.checkbox.id, 'click', this.processCalculation, this);
 				}
-				slikcalc.addListener(rowConfig.id, 'keyup', this.keyupEvent, this);
+				slikcalc.addListener(rowConfig.id, 'keyup', this.change, this);
+				slikcalc.addListener(rowConfig.id, 'change', this.change, this);
 			}
 		}
 	};
