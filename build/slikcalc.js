@@ -1,9 +1,9 @@
 /**
- * Copyright (c) 2012 Brad Harris - bmharris@gmail.com
+ * Copyright (c) 2013 Brad Harris - bmharris@gmail.com
  * https://github.com/bmharris/slikcalc
  * Code licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
- * version 2.0.1
+ * version 2.0.2
  */
 /**
  * @namespace slikcalc
@@ -348,10 +348,10 @@ var slikcalc;
 		calculationComplete : null,
 
 		/**
-		 * @description Internal value of the time when the last keyup event fired used to make sure and
+		 * @description Internal value of the time when the last keyup or change event fired used to make sure and
 		 * fire the calculate event only after there is a delay in typing for performance reasons
 		 */
-		lastKeyUp : null,
+		lastChange : null,
 
 		/**
 		 * @description Internal value tracking the number of calculations triggered used to prevent callbacks from firing out of synch
@@ -379,11 +379,11 @@ var slikcalc;
 		registerListeners : false,
 
 		/**
-		 * @description Configuration value for the pause in keyup events to wait for before calculating.
-		 * Setting this to zero will cause calculations to perform on each keyup event, which could become costly with many calculators
+		 * @description Configuration value for the pause in keyup or change events to wait for before calculating.
+		 * Setting this to zero will cause calculations to perform on each keyup or change event, which could become costly with many calculators
 		 * chained together
 		 */
-		keyupDelay: 600,
+		changeDelay : 600,
 
 		/**
 		 * @description Internal boolean to track if the calculator has been initialized yet
@@ -427,18 +427,18 @@ var slikcalc;
 		},
 
 		/**
-		 * @description Wrapper method to trigger processCalculation when there is a pause in users key events
+		 * @description Wrapper method to trigger processCalculation when there is a change event
 		 */
-		keyupEvent : function () {
-			this.lastKeyup = new Date().getTime();
+		change : function () {
+			this.lastChange = new Date().getTime();
 			this.calculations = this.calculations + 1;
 			var that = this, calculation = this.calculations;
 			setTimeout(function () {
-				var currentTime = new Date().getTime(), difference = currentTime - that.lastKeyup;
-				if (calculation === that.calculations && difference > that.keyupDelay) {
+				var currentTime = new Date().getTime(), difference = currentTime - that.lastChange;
+				if (calculation === that.calculations && difference > that.changeDelay) {
 					that.processCalculation();
 				}
-			}, (this.keyupDelay + 100));
+			}, (this.changeDelay + 100));
 		},
 
 		/**
@@ -555,7 +555,8 @@ var slikcalc;
 				if (rowConfig.checkbox !== undefined) {
 					slikcalc.addListener(rowConfig.checkbox.id, 'click', this.processCalculation, this);
 				}
-				slikcalc.addListener(rowConfig.id, 'keyup', this.keyupEvent, this);
+				slikcalc.addListener(rowConfig.id, 'keyup', this.change, this);
+				slikcalc.addListener(rowConfig.id, 'change', this.change, this);
 			}
 		}
 	};
@@ -678,7 +679,8 @@ var slikcalc;
 				vars[idx].defaultValue = vars[idx].defaultValue || 0;
 				rowConfig.registerListeners = rowConfig.registerListeners === true || (this.registerListeners === true && rowConfig.registerListeners !== false);
 				if (rowConfig.registerListeners === true) {
-					slikcalc.addListener(vars[idx].id, 'keyup', this.keyupEvent, this);
+					slikcalc.addListener(vars[idx].id, 'keyup', this.change, this);
+					slikcalc.addListener(vars[idx].id, 'change', this.change, this);
 				}
 			}
 		}

@@ -1,6 +1,6 @@
 {
 	"name": "slikcalc",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"author": "Brad Harris <bmharris@gmail.com>",
 	"description": "javascript calculator library for the browser",
 	"contributors": [
