@@ -132,7 +132,7 @@ var slikcalc;
 				if (calculation === that.calculations && difference > that.changeDelay) {
 					that.processCalculation();
 				}
-			}, (this.changeDelay + 0));
+			}, (this.changeDelay + 100));
 		},
 
 		/**
