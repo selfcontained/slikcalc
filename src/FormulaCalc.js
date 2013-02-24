@@ -98,7 +98,8 @@ var slikcalc;
 				vars[idx].defaultValue = vars[idx].defaultValue || 0;
 				rowConfig.registerListeners = rowConfig.registerListeners === true || (this.registerListeners === true && rowConfig.registerListeners !== false);
 				if (rowConfig.registerListeners === true) {
-					slikcalc.addListener(vars[idx].id, 'keyup', this.keyupEvent, this);
+					slikcalc.addListener(vars[idx].id, 'keyup', this.change, this);
+					slikcalc.addListener(vars[idx].id, 'change', this.change, this);
 				}
 			}
 		}
