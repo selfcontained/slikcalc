@@ -42,8 +42,8 @@ slikcalc.examples = {
 	setupColumnCalcSubtract : function() {
 		this.columnCalcSubtract.calc = slikcalc.create('column', {
 			total: {
-			    id: 'cc-sub-total',
-			    operator: '-'
+				id: 'cc-sub-total',
+				operator: '-'
 			},
 			registerListeners: true,
 			calcOnLoad: true
@@ -55,14 +55,14 @@ slikcalc.examples = {
 
 	setupFormulaCalc : function() {
 		this.formulaCalc = slikcalc.create('formula', {
-			formula: '( {a} + {b} ) * {c} = {d}',
+			formula: '( {a} + {bee} ) * {c} = {total}',
 			calcOnLoad: true,
             registerListeners: true,
 			vars: {
 				a: { id: 'formula-1' },
-				b: { id: 'formula-2' },
+				bee: { id: 'formula-2' },
 				c: { id: 'formula-3', defaultValue: 1},
-				d: { id: 'formula-4'}
+				total: { id: 'formula-4'}
 			}
 		});
 	},

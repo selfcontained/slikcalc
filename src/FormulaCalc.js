@@ -42,7 +42,7 @@ var slikcalc;
 	/**
 	 * @description Regular Expression to find variables in the formula
 	 */
-	slikcalc.FormulaCalc.prototype.varMatch = /\{(\w)\}/gi;
+	slikcalc.FormulaCalc.prototype.varMatch = /\{(\w+)\}/gi;
 
 	/**
 	 * @description {Array} Array of row objects for the calculator
