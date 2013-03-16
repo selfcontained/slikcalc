@@ -5,7 +5,7 @@ var slikcalc;
 (function () {
 	"use strict";
 
-	var domReady = false;
+	var domReady = document.readyState === 'complete' || false;
 
 	function addListener(element, type, method, scope) {
 		var cb = function () { method.call(scope); };
@@ -55,9 +55,11 @@ var slikcalc;
 
 	};
 
-	slikcalc.adapter.addOnLoad(function () {
-		domReady = true;
-	});
+	if (!domReady) {
+		slikcalc.adapter.addOnLoad(function () {
+			domReady = true;
+		});
+	}
 
 	slikcalc.adapter.Event = function () {
 		this._subscribers = [];
