@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2013 Brad Harris - bmharris@gmail.com
- * https://github.com/bmharris/slikcalc
+ * https://github.com/selfcontained/slikcalc
  * Code licensed under the MIT License:
  * http://www.opensource.org/licenses/mit-license.php
  * version 2.0.3
